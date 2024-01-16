@@ -1,0 +1,2 @@
+gg.alert("Editing in progress")
+os.exit()
