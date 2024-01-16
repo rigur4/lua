@@ -1,2 +1,2 @@
-gg.alert("Editing in progress")
+gg.alert("編集中です\n更新日:2024/01/16 20:17")
 os.exit()
