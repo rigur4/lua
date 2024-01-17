@@ -6,7 +6,7 @@ UpdateDate : 2024/1/16
 userMode = 2
 gg.clearList()
 gg.clearResults()
-gg.alert("\nコードの追加に伴い、スクリプトの使用感を向上させるためにコードを書き直しています。徐々に新しいコードを追加していくので今しばらくお待ちください。\n2024/01/16")
+gg.alert("\nコードの追加に伴い、スクリプトの使用感を向上させるためにコードを書き直しています。\n徐々に新しいコードを追加していくので今しばらくお待ちください。\n\n2024/01/16")
 ---------------------------------------------------------------------------
 function mainMenu()
     IncludeCheckAndTrueFalseA("_Equipment")
@@ -81,7 +81,7 @@ end
 				local count = gg.getResultsCount()
 				if count >= 1 then
 				else
-					valueFromClass("BowgunAmmoSpec", "AB", "0x10", false, false, gg.TYPE_DWORD)	
+					valueFromClass("BowgunAmmoSpec", "B", "0x10", false, false, gg.TYPE_DWORD)	
 				end			
 				if BowgunMenu == 1 then
 					local results = gg.getResults(9999)
