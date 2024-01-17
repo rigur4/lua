@@ -1,0 +1,1295 @@
+--[[
+  GameName : Monster Hunter Now
+   Version : 68.1
+UpdateDate : 2024/1/17
+]]--
+userMode = 2
+gg.clearList()
+gg.clearResults()
+gg.alert("\nコードの追加に伴い、スクリプトの使用感を向上させるためにコードを書き直しています。\n徐々に新しいコードを追加していくので今しばらくお待ちください。\n\n2024/01/17")
+---------------------------------------------------------------------------
+function mainMenu()
+    IncludeCheckAndTrueFalseA("_Equipment")
+	main_Selected = {A}	
+	gg.setVisible(false)	
+    firstMenu = gg.choice({
+		(main_Selected[1] and "-> [1]    装備" or "[1]    装備"),
+		"[X]    おわる"
+	}, nil,"メインメニュー\n\nMonster - 68.1 (2024/1/17)")
+    if firstMenu == nil then
+		temporarilyhide()	
+		mainMenu()
+	elseif firstMenu == 1 then	
+		Equipment()
+	elseif firstMenu == 2 then
+		gg.clearList()
+		gg.clearResults()
+	    os.exit()
+	end
+end
+	function Equipment()
+		IncludeCheckAndTrueFalseA("_DualBlades_Equipment")
+		IncludeCheckAndTrueFalseB("_Bowgun_Equipment")
+		Equipmentl_Selected = {A, B}
+		gg.setVisible(false)	
+		EquipmentMenu = gg.choice({
+			(Equipmentl_Selected[1] and "-> [1]    双剣*" or "[1]    双剣*"),
+			(Equipmentl_Selected[2] and "-> [2]    ボウガン*" or "[2]    ボウガン*"),
+			"[←]    もどる"
+		}, nil,"メインメニュー/装備\n*該当の装備をした後に実行")		
+		if EquipmentMenu == nil then
+			temporarilyhide()	
+			Equipment()
+		elseif EquipmentMenu == 1 then	
+			while true do
+				temporarilyhide()
+				gg.setVisible(false)
+				local choice = gg.alert("'双剣'を装備した状態で実行してください\n装備のパラメータが変更されると解除されるのでその際はやり直してください\n\n(準備し直す場合は画面外をタップ)","[→]    すすむ","[←]    もどる")
+				if choice == 1 then
+					break
+				elseif choice == 2 then
+					Equipment()
+					break					
+				end
+			end
+			BattleDualBladesLogicSetupDemonModeStaminaConsumptionTime_Selected = {false, false, false}	
+			BattleDualBladesLogicSetupNormalModeStaminaRecoveryTime_Selected = {false, false, false}
+			BattleDualBladesLogicSetupNoStaminaRate_Selected = {false, false, false}
+			BattleDualBladesLogicSetupDemonModeSpGaugeConsumption_Selected = {false, false}
+			DualBlades()			
+		elseif EquipmentMenu == 2 then	
+			while true do
+				temporarilyhide()
+				gg.setVisible(false)
+				local choice = gg.alert("'ボウガン'を装備した状態で実行してください\n装備のパラメータが変更されると解除されるのでその際はやり直してください\n\n(準備し直す場合は画面外をタップ)","[→]    すすむ","[←]    もどる")
+				if choice == 1 then
+					break
+				elseif choice == 2 then
+					Equipment()
+					break					
+				end
+			end
+			BowgunAmmoSpecRecoilType_Selected = {false, false, false, false, false}	
+			BowgunAmmoSpecReloadType_Selected = {false, false, false, false, false}	
+			BowgunAmmoSpecCapacity_Selected = {false, false, false}	
+			BowgunAmmoSettingsProtoAmmoType_Selected = {false, false, false, false, false, false}
+			BowgunAmmoSettingsProtoAmmoElementType_Selected = {false, false, false, false, false, false, false, false, false, false, false}
+			BowgunAmmoSettingsProtoAmmoLevel_Selected = {false, false}	
+			Bowgun()
+		elseif EquipmentMenu == 3 then					
+			mainMenu()
+		end		
+	end
+		function Bowgun()
+			IncludeCheckAndTrueFalseA("RecoilType_Bowgun_Equipment")
+			IncludeCheckAndTrueFalseB("ReloadType_Bowgun_Equipment")
+			IncludeCheckAndTrueFalseC("Capacity_Bowgun_Equipment")
+			IncludeCheckAndTrueFalseD("AmmoType_Bowgun_Equipment")
+			IncludeCheckAndTrueFalseE("AmmoElementType_Bowgun_Equipment")
+			IncludeCheckAndTrueFalseF("AmmoLevel_Bowgun_Equipment")
+			Bowgun_Selected = {A, B, C, D, E, F}	
+			gg.clearResults()
+			local offset = {0x8, 0xC, 0x10, 0x14, 0x18, 0x1C}
+			local function applyoffset(selectedOffset)
+				local results = gg.getResults(9999)
+				gg.clearResults()
+				for i, v in ipairs(results) do
+					v.address = v.address + selectedOffset
+					v.flags = gg.TYPE_DWORD
+				end
+				gg.loadResults(results)
+			end
+			gg.setVisible(false)
+			BowgunMenu = gg.choice({
+				(Bowgun_Selected[1] and "-> [1]    反動パターン" or "[1]    反動パターン"),
+				(Bowgun_Selected[2] and "-> [2]    装填パターン" or "[2]    装填パターン"),
+				(Bowgun_Selected[3] and "-> [3]    装填数" or "[3]    装填数"),
+				(Bowgun_Selected[4] and "-> [4]    弾薬の種類" or "[4]    弾薬の種類"),
+				(Bowgun_Selected[5] and "-> [5]    弾薬の属性" or "[5]    弾薬の属性"),
+				(Bowgun_Selected[6] and "-> [6]    弾薬のレベル" or "[6]    弾薬のレベル"),
+				"[←]    もどる"
+			}, nil, "メインメニュー/装備/ボウガン")
+			if BowgunMenu == nil then
+				temporarilyhide()
+				Bowgun()
+			elseif BowgunMenu >= 1 and BowgunMenu <= 6 then
+				CheckAndLoadResults("_Bowgun_Equipment")
+				local count = gg.getResultsCount()
+				if count >= 1 then
+				else
+					valueFromClass("BowgunAmmoSpec", "B", "0x10", false, false, gg.TYPE_QWORD)	
+				end			
+				if BowgunMenu == 1 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BowgunAmmoSpec(0x10)RecoilType_Bowgun_Equipment"
+					end
+					gg.addListItems(results)				
+					applyoffset(offset[1])
+					BowgunAmmoSpec_RecoilType()
+				elseif BowgunMenu == 2 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BowgunAmmoSpec(0x10)ReloadType_Bowgun_Equipment"
+					end
+					gg.addListItems(results)	
+					applyoffset(offset[2])
+					BowgunAmmoSpec_ReloadType()
+				elseif BowgunMenu == 3 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BowgunAmmoSpec(0x10)Capacity_Bowgun_Equipment"
+					end
+					gg.addListItems(results)				
+					applyoffset(offset[3])
+					BowgunAmmoSpec_Capacity()
+				elseif BowgunMenu == 4 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BowgunAmmoSpec(0x10)AmmoType_Bowgun_Equipment"
+					end
+					gg.addListItems(results)			
+					MoveThePointer()
+					applyoffset(offset[4])
+					BowgunAmmoSettingsProto_AmmoType()
+				elseif BowgunMenu == 5 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BowgunAmmoSpec(0x10)AmmoElementType_Bowgun_Equipment"
+					end
+					gg.addListItems(results)
+					MoveThePointer()
+					applyoffset(offset[5])
+					BowgunAmmoSettingsProto_AmmoElementType()
+				elseif BowgunMenu == 6 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BowgunAmmoSpec(0x10)AmmoLevel_Bowgun_Equipment"
+					end
+					gg.addListItems(results)
+					MoveThePointer()
+					applyoffset(offset[6])
+					BowgunAmmoSettingsProto_AmmoLevel()
+				end
+			elseif BowgunMenu == 7 then
+				Equipment()
+			end
+		end
+			function BowgunAmmoSpec_RecoilType()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local BowgunRecoilType = {
+					(BowgunAmmoSpecRecoilType_Selected[1] and "-> [1]    パターン1   (最小)" or "[1]    パターン1   (最小)"),
+					(BowgunAmmoSpecRecoilType_Selected[2] and "-> [2]    パターン2" or "[2]    パターン2"),
+					(BowgunAmmoSpecRecoilType_Selected[3] and "-> [3]    パターン3" or "[3]    パターン3"),
+					(BowgunAmmoSpecRecoilType_Selected[4] and "-> [4]    パターン4   (最大)" or "[4]    パターン4   (最大)"),	
+					(BowgunAmmoSpecRecoilType_Selected[5] and "-> [5]    任意の値" or "[5]    任意の値"),	
+					"[←]    もどる"
+				}
+				BowgunAmmoSpecRecoilTypeMenu = gg.choice(BowgunRecoilType, nil, "メインメニュー/装備/ボウガン/反動パターン")
+				if BowgunAmmoSpecRecoilTypeMenu == nil then
+					temporarilyhide()	
+					BowgunAmmoSpec_RecoilType()
+				elseif BowgunAmmoSpecRecoilTypeMenu >= 1 and BowgunAmmoSpecRecoilTypeMenu <= 5 then
+					for i = 1, 5 do
+						BowgunAmmoSpecRecoilType_Selected[i] = false
+					end
+					BowgunAmmoSpecRecoilType_Selected[BowgunAmmoSpecRecoilTypeMenu] = true					
+					if BowgunAmmoSpecRecoilTypeMenu >= 1 and BowgunAmmoSpecRecoilTypeMenu <= 4 then
+						local chosenValue = tostring(BowgunAmmoSpecRecoilTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						BowgunAmmoSpec_RecoilType()
+					elseif BowgunAmmoSpecRecoilTypeMenu == 5 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの反動パターンを変更\n(範囲:1~4,1:小,2:中,3:大,4:特大,DWORD)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BowgunAmmoSpec_RecoilType()
+					end
+				elseif BowgunAmmoSpecRecoilTypeMenu == 6 then
+					Bowgun()
+				end	
+			end	
+			function BowgunAmmoSpec_ReloadType()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local BowgunReloadType = {
+					(BowgunAmmoSpecReloadType_Selected[1] and "-> [1]    パターン1   (最短)" or "[1]    パターン1   (最短)"),
+					(BowgunAmmoSpecReloadType_Selected[2] and "-> [2]    パターン2" or "[2]    パターン2"),
+					(BowgunAmmoSpecReloadType_Selected[3] and "-> [3]    パターン3" or "[3]    パターン3"),
+					(BowgunAmmoSpecReloadType_Selected[4] and "-> [4]    パターン4   (最長)" or "[4]    パターン4   (最長)"),	
+					(BowgunAmmoSpecReloadType_Selected[5] and "-> [5]    任意の値" or "[5]    任意の値"),	
+					"[←]    もどる"
+				}
+				BowgunAmmoSpecReloadTypeMenu = gg.choice(BowgunReloadType, nil,"メインメニュー//装備/ボウガン/装填パターン")
+				if BowgunAmmoSpecReloadTypeMenu == nil then
+					temporarilyhide()	
+					BowgunAmmoSpec_ReloadType()
+				elseif BowgunAmmoSpecReloadTypeMenu >= 1 and BowgunAmmoSpecReloadTypeMenu <= 5 then
+					for i = 1, 5 do
+						BowgunAmmoSpecReloadType_Selected[i] = false
+					end
+					BowgunAmmoSpecReloadType_Selected[BowgunAmmoSpecReloadTypeMenu] = true					
+					if BowgunAmmoSpecReloadTypeMenu >= 1 and BowgunAmmoSpecReloadTypeMenu <= 4 then
+						local chosenValue = tostring(BowgunAmmoSpecReloadTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						BowgunAmmoSpec_ReloadType()	
+					elseif BowgunAmmoSpecReloadTypeMenu == 5 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの装填パターンを変更\n(範囲:1~4,1:小,2:中,3:大,4:特大,DWORD)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BowgunAmmoSpec_ReloadType()	
+					end	
+				elseif BowgunAmmoSpecReloadTypeMenu  == 6 then
+					Bowgun()
+				end	
+			end			
+			function BowgunAmmoSpec_Capacity()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local BowgunCapacityValue = {"5", "50"}
+				BowgunAmmoSpecCapacityMenu = gg.choice({
+					(BowgunAmmoSpecCapacity_Selected[1] and "-> [1]    " .. BowgunCapacityValue[1] or "[1]    " .. BowgunCapacityValue[1]),
+					(BowgunAmmoSpecCapacity_Selected[2] and "-> [2]    " .. BowgunCapacityValue[2] or "[2]    " .. BowgunCapacityValue[2]),
+					(BowgunAmmoSpecCapacity_Selected[3] and "-> [3]    任意の値" or "[3]    任意の値"),
+					"[←]    もどる"
+				}, nil,"メインメニュー/装備/ボウガン/装填数")
+				if BowgunAmmoSpecCapacityMenu == nil then
+					temporarilyhide()	
+					BowgunAmmoSpec_Capacity()
+				elseif BowgunAmmoSpecCapacityMenu >= 1 and BowgunAmmoSpecCapacityMenu <= 3 then
+					for i = 1, 3 do
+						BowgunAmmoSpecCapacity_Selected[i] = false
+					end
+					BowgunAmmoSpecCapacity_Selected[BowgunAmmoSpecCapacityMenu] = true						
+					if BowgunAmmoSpecCapacityMenu >= 1 and BowgunAmmoSpecCapacityMenu <= 2 then
+						local chosenValue = BowgunCapacityValue[BowgunAmmoSpecCapacityMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						BowgunAmmoSpec_Capacity()
+					elseif BowgunAmmoSpecCapacityMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの装填数を変更\n(Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BowgunAmmoSpec_Capacity()
+					end
+				elseif BowgunAmmoSpecCapacityMenu == 4 then
+					Bowgun()
+				end	
+			end	
+			function BowgunAmmoSettingsProto_AmmoType()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local BowgunAmmoType = {
+					(BowgunAmmoSettingsProtoAmmoType_Selected[1] and "-> [1]    通常弾" or "[1]    通常弾"),
+					(BowgunAmmoSettingsProtoAmmoType_Selected[2] and "-> [2]    貫通弾" or "[2]    貫通弾"),
+					(BowgunAmmoSettingsProtoAmmoType_Selected[3] and "-> [3]    散弾" or "[3]    散弾"),
+					(BowgunAmmoSettingsProtoAmmoType_Selected[4] and "-> [4]    徹甲榴弾" or "[4]    徹甲榴弾"),
+					(BowgunAmmoSettingsProtoAmmoType_Selected[5] and "-> [5]    斬裂弾" or "[5]    斬裂弾"),		
+					(BowgunAmmoSettingsProtoAmmoType_Selected[6] and "-> [6]    任意の値" or "[6]    任意の値"),		
+					"[←]    もどる"
+				}
+				BowgunAmmoSettingsProtoAmmoTypeMenu = gg.choice(BowgunAmmoType, nil,"メインメニュー/装備/ボウガン/弾薬の種類")
+				if BowgunAmmoSettingsProtoAmmoTypeMenu == nil then
+					temporarilyhide()	
+					BowgunAmmoSettingsProto_AmmoType()
+				elseif BowgunAmmoSettingsProtoAmmoTypeMenu >= 1 and BowgunAmmoSettingsProtoAmmoTypeMenu <= 6 then
+					for i = 1, 6 do
+						BowgunAmmoSettingsProtoAmmoType_Selected[i] = false
+					end
+					BowgunAmmoSettingsProtoAmmoType_Selected[BowgunAmmoSettingsProtoAmmoTypeMenu] = true						
+					if BowgunAmmoSettingsProtoAmmoTypeMenu >= 1 and BowgunAmmoSettingsProtoAmmoTypeMenu <= 5 then
+						local chosenValue = tostring(BowgunAmmoSettingsProtoAmmoTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						BowgunAmmoSettingsProto_AmmoType()
+					elseif BowgunAmmoSettingsProtoAmmoTypeMenu == 6 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの弾薬の種類を変更\n(範囲:1~5,1:通常弾,2:貫通弾,3:散弾,4:徹甲榴弾,5:斬裂弾,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end		
+						BowgunAmmoSettingsProto_AmmoType()
+					end
+				elseif BowgunAmmoSettingsProtoAmmoTypeMenu == 7 then
+					Bowgun()
+				end
+			end		
+			function BowgunAmmoSettingsProto_AmmoElementType()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local BowgunAmmoElementType = {
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[1] and "-> [1]    なし" or "[1]    なし"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[2] and "-> [2]    火" or "[2]    火"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[3] and "-> [3]    水" or "[3]    水"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[4] and "-> [4]    雷" or "[4]    雷"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[5] and "-> [5]    氷" or "[5]    氷"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[6] and "-> [6]    龍" or "[6]    龍"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[7] and "-> [7]    毒" or "[7]    毒"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[8] and "-> [8]    麻痺" or "[8]    麻痺"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[9] and "-> [9]    睡眠" or "[9]    睡眠"),
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[10] and "-> [10]    爆破" or "[10]    爆破"),	
+					(BowgunAmmoSettingsProtoAmmoElementType_Selected[11] and "-> [11]    任意の値" or "[11]    任意の値"),	
+					"[←]    もどる"
+				}
+				BowgunAmmoSettingsProtoAmmoElementTypeMenu = gg.choice(BowgunAmmoElementType, nil,"メインメニュー/装備/ボウガン/弾薬の属性種類")
+				if BowgunAmmoSettingsProtoAmmoElementTypeMenu == nil then
+					temporarilyhide()	
+					BowgunAmmoSettingsProto_AmmoElementType()
+				elseif BowgunAmmoSettingsProtoAmmoElementTypeMenu >= 1 and BowgunAmmoSettingsProtoAmmoElementTypeMenu <= 11 then
+					for i = 1, 11 do
+						BowgunAmmoSettingsProtoAmmoElementType_Selected[i] = false
+					end
+					BowgunAmmoSettingsProtoAmmoElementType_Selected[BowgunAmmoSettingsProtoAmmoElementTypeMenu] = true		
+					if BowgunAmmoSettingsProtoAmmoElementTypeMenu >= 1 and BowgunAmmoSettingsProtoAmmoElementTypeMenu <= 10 then
+						local chosenValue = tostring(BowgunAmmoSettingsProtoAmmoElementTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						BowgunAmmoSettingsProto_AmmoElementType()
+					elseif BowgunAmmoSettingsProtoAmmoElementTypeMenu == 11 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの弾薬の属性種類を変更\n(範囲:1~10,1:なし,2:火,3:水,4雷,5:氷,6:龍,7:毒,8:麻痺,9:睡眠,10:爆破,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						BowgunAmmoSettingsProto_AmmoElementType()
+					end
+				elseif BowgunAmmoSettingsProtoAmmoElementTypeMenu == 12 then
+					Bowgun()
+				end
+			end		
+			function BowgunAmmoSettingsProto_AmmoLevel()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local BowgunAmmoLevel = {"1"}	
+				EquipmentBowgunAmmoLevelMenu = gg.choice({
+					(BowgunAmmoSettingsProtoAmmoLevel_Selected[1] and "-> [1]    " .. BowgunAmmoLevel[1] or "[1]    " .. BowgunAmmoLevel[1]),
+					(BowgunAmmoSettingsProtoAmmoLevel_Selected[2] and "-> [2]    任意" or "[2]    任意"),		
+					"[←]    もどる"
+				}, nil,"メインメニュー/装備/ボウガン/弾薬のレベル")
+				if EquipmentBowgunAmmoLevelMenu == nil then
+					temporarilyhide()	
+					BowgunAmmoSettingsProto_AmmoLevel()
+				elseif EquipmentBowgunAmmoLevelMenu >= 1 and EquipmentBowgunAmmoLevelMenu <= 2 then
+					for i = 1, 2 do
+						BowgunAmmoSettingsProtoAmmoLevel_Selected[i] = false
+					end
+					BowgunAmmoSettingsProtoAmmoLevel_Selected[EquipmentBowgunAmmoLevelMenu] = true						
+					if EquipmentBowgunAmmoLevelMenu == 1 then
+						local chosenValue = BowgunAmmoLevel[EquipmentBowgunAmmoLevelMenu]
+						gg.editAll(chosenValue,gg.TYPE_DWORD)
+						BowgunAmmoSettingsProto_AmmoLevel()
+					elseif EquipmentBowgunAmmoLevelMenu == 2 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの弾薬のレベルを変更\n(範囲:1~?,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						BowgunAmmoSettingsProto_AmmoLevel()
+					end
+				elseif EquipmentBowgunAmmoLevelMenu == 3 then
+					Bowgun()
+				end
+			end				
+		function DualBlades()
+			IncludeCheckAndTrueFalseA("DemonModeStaminaConsumptionTime_DualBlades_Equipment")
+			IncludeCheckAndTrueFalseB("NormalModeStaminaRecoveryTime_DualBlades_Equipment")
+			IncludeCheckAndTrueFalseC("NoStaminaRate_DualBlades_Equipment")
+			IncludeCheckAndTrueFalseD("DemonModeSpGaugeConsumption_DualBlades_Equipment")
+			DualBlades_Selected = {A, B, C, D}	
+			gg.clearResults()
+			local offset = {0x0, 0x4, 0x8, 0x8}
+			local function applyoffset(selectedOffset)
+				local results = gg.getResults(9999)
+				gg.clearResults()
+				for i, v in ipairs(results) do
+					v.address = v.address + selectedOffset
+					v.flags = gg.TYPE_FLOAT
+				end
+				gg.loadResults(results)
+			end
+			gg.setVisible(false)
+			DualBladesMenu = gg.choice({
+				(DualBlades_Selected[1] and "-> [1]    鬼人化の継続時間" or "[1]    鬼人化の継続時間"),
+				(DualBlades_Selected[2] and "-> [2]    スタミナの回復時間" or "[2]    スタミナの回復時間"),
+				(DualBlades_Selected[3] and "-> [3]    スタミナが不足している割合" or "[3]    スタミナが不足している割合"),
+				(DualBlades_Selected[4] and "-> [4]    鬼人化に消費するSPゲージの減少量" or "[4]    鬼人化に消費するSPゲージの減少量"),
+				"[←]    もどる"
+			}, nil, "メインメニュー/装備/双剣")
+			if DualBladesMenu == nil then
+				temporarilyhide()
+				DualBlades()
+			elseif DualBladesMenu >= 1 and DualBladesMenu <= 4 then
+				CheckAndLoadResults("_DualBlades_Equipment")
+				local count = gg.getResultsCount()
+				if count >= 1 then
+				else
+					valueFromClass("BattleDualBladesLogicSetup", "B", "0x38", false, false, gg.TYPE_FLOAT)	
+				end			
+				if DualBladesMenu == 1 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BattleDualBladesLogicSetup(0x38)DemonModeStaminaConsumptionTime_DualBlades_Equipment"
+					end
+					gg.addListItems(results)				
+					applyoffset(offset[1])
+					BattleDualBladesLogicSetup_DemonModeStaminaConsumptionTime()
+				elseif DualBladesMenu == 2 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BattleDualBladesLogicSetup(0x38)NormalModeStaminaRecoveryTime_DualBlades_Equipment"
+					end
+					gg.addListItems(results)	
+					applyoffset(offset[2])
+					BattleDualBladesLogicSetup_NormalModeStaminaRecoveryTime()
+				elseif DualBladesMenu == 3 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BattleDualBladesLogicSetup(0x38)NoStaminaRate_DualBlades_Equipment"
+					end
+					gg.addListItems(results)				
+					applyoffset(offset[3])
+					BattleDualBladesLogicSetup_NoStaminaRate()
+				elseif DualBladesMenu == 4 then
+					local results = gg.getResults(9999)
+					for i, v in ipairs(results) do
+						v.name = "BattleDualBladesLogicSetup(0x38)DemonModeSpGaugeConsumption_DualBlades_Equipment"
+					end
+					gg.addListItems(results)			
+					applyoffset(offset[4])
+					BattleDualBladesLogicSetup_DemonModeSpGaugeConsumption()
+				end
+			elseif DualBladesMenu == 5 then
+				Equipment()
+			end
+		end		
+			function BattleDualBladesLogicSetup_DemonModeStaminaConsumptionTime()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local DualBladesDemonModeStaminaConsumptionTime = {"15", "120"}
+				BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu = gg.choice({
+					(BattleDualBladesLogicSetupDemonModeStaminaConsumptionTime_Selected[1] and "-> [1]    デフォルト" or "[1]    デフォルト"),
+					(BattleDualBladesLogicSetupDemonModeStaminaConsumptionTime_Selected[2] and "-> [2]    120秒" or "[2]    120秒"),
+					(BattleDualBladesLogicSetupDemonModeStaminaConsumptionTime_Selected[3] and "-> [3]    任意の値" or "[3]    任意の値"),	
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/双剣/鬼人化の継続時間")
+				if BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu == nil then
+					temporarilyhide()	
+					BattleDualBladesLogicSetup_DemonModeStaminaConsumptionTime()
+				elseif BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu >= 1 and BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu <= 3 then
+					for i = 1, 3 do
+						BattleDualBladesLogicSetupDemonModeStaminaConsumptionTime_Selected[i] = false
+					end
+					BattleDualBladesLogicSetupDemonModeStaminaConsumptionTime_Selected[BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu] = true					
+					if BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu >= 1 and BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu <= 2 then
+						local chosenValue = DualBladesDemonModeStaminaConsumptionTime[BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						BattleDualBladesLogicSetup_DemonModeStaminaConsumptionTime()
+					elseif BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu == 3 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "双剣の鬼人化の継続時間を変更\n(秒[s],デフォ:15,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BattleDualBladesLogicSetup_DemonModeStaminaConsumptionTime()
+					end
+				elseif BattleDualBladesLogicSetupDemonModeStaminaConsumptionTimeMenu == 4 then
+					DualBlades()
+				end	
+			end				
+			function BattleDualBladesLogicSetup_NormalModeStaminaRecoveryTime()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local DualBladesNormalModeStaminaRecoveryTime = {"15", "0"}
+				BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu = gg.choice({
+					(BattleDualBladesLogicSetupNormalModeStaminaRecoveryTime_Selected[1] and "-> [1]    デフォルト" or "[1]    デフォルト"),
+					(BattleDualBladesLogicSetupNormalModeStaminaRecoveryTime_Selected[2] and "-> [2]    不要" or "[2]    不要"),
+					(BattleDualBladesLogicSetupNormalModeStaminaRecoveryTime_Selected[3] and "-> [3]    任意の値" or "[3]    任意の値"),	
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/双剣/スタミナの回復時間")
+				if BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu == nil then
+					temporarilyhide()	
+					BattleDualBladesLogicSetup_NormalModeStaminaRecoveryTime()
+				elseif BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu >= 1 and BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu <= 3 then
+					for i = 1, 3 do
+						BattleDualBladesLogicSetupNormalModeStaminaRecoveryTime_Selected[i] = false
+					end
+					BattleDualBladesLogicSetupNormalModeStaminaRecoveryTime_Selected[BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu] = true					
+					if BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu >= 1 and BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu <= 2 then
+						local chosenValue = DualBladesNormalModeStaminaRecoveryTime[BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						BattleDualBladesLogicSetup_NormalModeStaminaRecoveryTime()
+					elseif BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu == 3 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "双剣のスタミナの回復時間を変更\n(秒[s],デフォ:15,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BattleDualBladesLogicSetup_NormalModeStaminaRecoveryTime()
+					end
+				elseif BattleDualBladesLogicSetupNormalModeStaminaRecoveryTimeMenu == 4 then
+					DualBlades()
+				end	
+			end				
+			function BattleDualBladesLogicSetup_NoStaminaRate()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local DualBladesNoStaminaRate = {"0", "1"}
+				BattleDualBladesLogicSetupNoStaminaRateMenu = gg.choice({
+					(BattleDualBladesLogicSetupNoStaminaRate_Selected[1] and "-> [1]    デフォルト" or "[1]    デフォルト"),
+					(BattleDualBladesLogicSetupNoStaminaRate_Selected[2] and "-> [2]    常に不足状態" or "[2]    常に不足状態"),
+					(BattleDualBladesLogicSetupNoStaminaRate_Selected[3] and "-> [3]    任意の値" or "[3]    任意の値"),	
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/双剣/スタミナが不足している割合")
+				if BattleDualBladesLogicSetupNoStaminaRateMenu == nil then
+					temporarilyhide()	
+					BattleDualBladesLogicSetup_NoStaminaRate()
+				elseif BattleDualBladesLogicSetupNoStaminaRateMenu >= 1 and BattleDualBladesLogicSetupNoStaminaRateMenu <= 3 then
+					for i = 1, 3 do
+						BattleDualBladesLogicSetupNoStaminaRate_Selected[i] = false
+					end
+					BattleDualBladesLogicSetupNoStaminaRate_Selected[BattleDualBladesLogicSetupNoStaminaRateMenu] = true					
+					if BattleDualBladesLogicSetupNoStaminaRateMenu >= 1 and BattleDualBladesLogicSetupNoStaminaRateMenu <= 2 then
+						local chosenValue = DualBladesNoStaminaRate[BattleDualBladesLogicSetupNoStaminaRateMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						BattleDualBladesLogicSetup_NoStaminaRate()
+					elseif BattleDualBladesLogicSetupNoStaminaRateMenu == 3 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "双剣のスタミナが不足している割合を変更\n(割合,範囲:0~1,デフォ:0,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BattleDualBladesLogicSetup_NoStaminaRate()
+					end
+				elseif BattleDualBladesLogicSetupNoStaminaRateMenu == 4 then
+					DualBlades()
+				end	
+			end				
+			function BattleDualBladesLogicSetup_DemonModeSpGaugeConsumption()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local DualBladesDemonModeSpGaugeConsumption = {"0"}
+				BattleDualBladesLogicSetupNoStaminaRateMenu = gg.choice({
+					(BattleDualBladesLogicSetupDemonModeSpGaugeConsumption_Selected[1] and "-> [1]    なし" or "[1]    なし"),
+					(BattleDualBladesLogicSetupDemonModeSpGaugeConsumption_Selected[2] and "-> [2]    任意の値" or "[2]    任意の値"),	
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/双剣/鬼人化に消費するSPゲージの減少量")
+				if BattleDualBladesLogicSetupNoStaminaRateMenu == nil then
+					temporarilyhide()	
+					BattleDualBladesLogicSetup_DemonModeSpGaugeConsumption()
+				elseif BattleDualBladesLogicSetupNoStaminaRateMenu >= 1 and BattleDualBladesLogicSetupNoStaminaRateMenu <= 2 then
+					for i = 1, 2 do
+						BattleDualBladesLogicSetupDemonModeSpGaugeConsumption_Selected[i] = false
+					end
+					BattleDualBladesLogicSetupDemonModeSpGaugeConsumption_Selected[BattleDualBladesLogicSetupNoStaminaRateMenu] = true					
+				if BattleDualBladesLogicSetupNoStaminaRateMenu == 1 then	
+						local chosenValue = DualBladesDemonModeSpGaugeConsumption[BattleDualBladesLogicSetupNoStaminaRateMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						BattleDualBladesLogicSetup_DemonModeSpGaugeConsumption()
+					elseif BattleDualBladesLogicSetupNoStaminaRateMenu == 2 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "双剣の鬼人化に消費するSPゲージの減少量を変更\n(割合,範囲:0~1,デフォ:0,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						BattleDualBladesLogicSetup_DemonModeSpGaugeConsumption()
+					end
+				elseif BattleDualBladesLogicSetupNoStaminaRateMenu == 3 then
+					DualBlades()
+				end	
+			end					
+---------------------------------------------------------------------------		
+function temporarilyhide()
+	gg.setVisible(false)
+	while true do
+	if gg.isVisible() then
+		break 
+		end
+	end 
+end
+function MoveThePointer()
+	local newAddresses = {}
+	local results = gg.getResults(9999)
+	for i, result in ipairs(results) do
+		local qwordValue = gg.getValues({{address = result.address, flags = gg.TYPE_QWORD}})[1].value
+		local hexQwordValue = string.format("%X", qwordValue)
+		local newAddress = "0x" .. hexQwordValue
+		table.insert(newAddresses, {address = newAddress, flags = gg.TYPE_QWORD, value = qwordValue})
+	end
+	gg.loadResults(newAddresses)
+end
+function IncludeCheckAndTrueFalseA(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+        if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        A = true
+    else
+        A = false
+    end
+end
+function IncludeCheckAndTrueFalseB(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+        if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        B = true
+    else
+        B = false
+    end
+end
+function IncludeCheckAndTrueFalseC(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+        if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        C = true
+    else
+        C = false
+    end
+end
+function IncludeCheckAndTrueFalseD(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+        if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        D = true
+    else
+        D = false
+    end
+end
+function IncludeCheckAndTrueFalseE(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+       if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        E = true
+    else
+        E = false
+    end
+end
+function IncludeCheckAndTrueFalseF(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+      if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        F = true
+    else
+        F = false
+    end
+end
+function IncludeCheckAndTrueFalseG(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+        if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        G = true
+    else
+        G = false
+    end
+end
+function IncludeCheckAndTrueFalseH(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+       if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        H = true
+    else
+        H = false
+    end
+end
+function IncludeCheckAndTrueFalseI(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+       if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+        I = true
+    else
+        I = false
+    end
+end
+function CheckAndLoadResults(targetName)
+    local results = gg.getListItems()
+    local found = false
+    for _, result in ipairs(results) do
+        if result.name and string.find(result.name, targetName) then
+            found = true
+            break
+        end
+    end
+    if found then
+		gg.loadResults(gg.getListItems())
+    else
+    end
+end		
+------------------------<<Field Offset Finder>>------------------------
+--[[ 🔴How To use In your Script ?🔴
+There are 2 modes in this script 1. Developer mode 2. User mode
+The devoper mode is enabled automatically so you don't need to do anything. But if you want to make your own script to allow users to use your script then. Edit the userMode = 1 to userMode = 2. Now you can set your hacks. I have already made a template menu, submenu and functions for you. you can make some minor changes in them. 
+The main function you will use is valueFromClass() where you have to give 5 inputs like this.
+ valueFromClass("Levels", "0x10", false, true, gg.TYPE_FLOAT) 
+The first input is class name , second input is offset, third input is do you want to try harder if yes then set true or false is good, the fourth is for 32 bit if the script is for 32 bit then make it true otherwise leaving it false means the script is 64 bit, the fifth is value type you want to search for you can see that in the dump file. The value at left is the data type in the dump and the values at left is what you have to set in the valueFromClass() function. 
+1. Byte / Boolean --> gg.TYPE_BYTE
+2. Dword / 32 bit Int --> gg.TYPE_DWORD
+3. Qword / 64 bit Int --> gg.TYPE_QWORD
+4. Float --> gg.TYPE_FLOAT
+5. Double --> gg.TYPE_DOUBLE
+userMode = 
+1 = Developer mode, 2 = user mode ]]--
+function valueFromClass(class, dinitial, offset, tryHard, bit32, valueType)
+	Get_user_input = {}
+	Get_user_input[1] = class
+	Get_user_input[2] = dinitial
+	Get_user_input[3] = offset
+	Get_user_input[4] = tryHard
+	Get_user_input[5] = bit32
+	Get_user_type = valueType
+	start2()
+end
+function loopCheck()
+	if userMode == 1 then
+		UI()
+	elseif error == 3 then
+		stopClose()
+	end
+end
+--[[ ℹ️ These function help in error log ]]--
+function found_(message)
+	if error == 1 then
+		found2(message)
+	elseif error == 2 then
+		found3(message)
+	elseif error == 3 then
+		found4(message)
+	else
+		found(message)
+	end
+end
+function found(message)
+	if count == 0 then
+		gg.clearResults()
+		gg.clearList()
+		first_error = message
+		error = 1
+		second_start()
+	end
+end
+function found2(message)
+	if count == 0 then
+		gg.clearResults()
+		gg.clearList()
+		second_error = message
+		error = 2
+		third_start()
+	end
+end
+function found3(message)
+	if count == 0 then
+		gg.clearResults()
+		gg.clearList()
+		third_error = message
+		error = 3
+		fourth_start()
+	end
+end
+function found4(message)
+	if count == 0 then
+		gg.clearResults()
+		gg.clearList()
+		gg.alert("❌ エラー ❌\nTry 1: "..first_error.."\nTry 2: "..second_error.."\nTry 3: "..third_error.."\nTry 4: ".. message.."\n\nℹ️エラーの原因ℹ️\n\n🟢O_initial(dinitial)_search,: \n⇒ クラス名検索\n・クラスデータの誤り\n・クラス名,リファイン値の確認\n\n🟡CA_pointer_search,CA(2)_apply_offset,Q_apply_fix: \nポインタ検索1\n⇒ クラスデータが複製されていない。\n・変数を生成させてからコードを実行する(変数が生成される条件:該当の装備をするなど{*を確認})\n\n🔴A_base_value(accuracy): \nポインタ検索2\n⇒ 変数が生成されていない\n・変数を生成させてからコードを実行する\n・実行中に変数が生成され直すような操作をしない(装備の変更や強化など)\n\n⚫A_user_given_offset: \nオフセットの適用\n⇒オフセットが無効\n・16進数か確認\n\n🟢と⚫のエラーはコードの不具合の可能性が高いです。naruse1122(Discord)まで連絡してください。")
+		gg.setVisible(true)
+		loopCheck()
+	end
+end
+--[[ 🟢Value Finders From Class and offset 🟢]]--
+function user_input_taker()
+	if userMode == 1 then
+		if Get_user_input == nil then
+			default1 = ""
+			default2 = ""
+			default3 = "0x"
+			default4 = false
+			default5 = false
+		else
+			default1 = Get_user_input[1]
+			default2 = Get_user_input[2]
+			default3 = Get_user_input[3]
+			default4 = Get_user_input[4]
+			default5 = Get_user_input[5]
+		end
+		gg.setVisible(false)
+		Get_user_input = gg.prompt(
+		{"🔰Script By🔰: https://t.me/Hackers_House_YT\n\nClassName: ","ClassName Initial:", "Offset: ","Try Harder --(decreases accuracy)","Try For 32 bit"},
+		{default1,default2,default3,default4,default5},{"text","text","text","checkbox","checkbox"})
+		if Get_user_input ~= nil then
+			if (Get_user_input[1] == "") or (Get_user_input[2] == "")or (Get_user_input[3] == "") then
+				gg.alert("ℹ️ Don't Leave Input Blankℹ️")
+				user_input_taker()
+			end
+		else
+			temporarilyhide()
+			UI()
+		end
+		gg.setVisible(false)
+		Get_user_type = gg.choice({"1. Byte / Boolean","2. Dword / 32 bit Int","3. Qword / 64 bit Int","4. Float","5. Double"},nil,"Choose The Output Type ℹ️")
+		if Get_user_type == 1 then
+			Get_user_type = gg.TYPE_BYTE
+		elseif Get_user_type == 2 then
+			Get_user_type = gg.TYPE_DWORD
+		elseif Get_user_type == 3 then
+			Get_user_type = gg.TYPE_QWORD
+		elseif Get_user_type == 4 then
+			Get_user_type = gg.TYPE_FLOAT
+		elseif Get_user_type == 5 then
+			Get_user_type = gg.TYPE_DOUBLE
+		else
+			temporarilyhide()
+			UI()
+		end
+		if Get_user_type ~= gg.TYPE_BYTE then
+			local offsetValue = tonumber(Get_user_input[3]) or 0
+			if (offsetValue % 4) ~= 0 and offsetValue ~= 0 then
+				gg.alert("ℹ️Hex Offset Must Be An Multiple OF 4ℹ️")
+				user_input_taker()
+			end
+		end
+	end
+	error = 0 
+end
+function O_initial_search()
+	gg.clearList()
+	gg.clearResults()
+	gg.toast("🟢Hackers House: First Try")
+	user_input = ":"..Get_user_input[1] 
+	user_input2 = ":"..Get_user_input[2] 
+	if Get_user_input[4] then
+		offst = 25
+	else
+		offst = 0
+	end
+end
+function O_dinitial_search()
+	if error > 1 then
+		gg.setRanges(gg.REGION_C_ALLOC)
+	else
+		gg.setRanges(gg.REGION_OTHER)
+	end
+	gg.searchNumber(user_input, gg.TYPE_BYTE)
+	count = gg.getResultsCount()
+	if count == 0 then
+		found_("O_dinitial_search")
+		return 0
+	end
+	gg.refineNumber(user_input2, gg.TYPE_BYTE)
+	count = gg.getResultsCount()
+	if count == 0 then
+		found_("O_dinitial_search")
+		return 0
+	end
+	val = gg.getResults(count)
+	gg.addListItems(val)
+end
+function CA_pointer_search()
+	gg.clearResults()
+	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
+	gg.loadResults(gg.getListItems())
+	gg.searchPointer(offst)
+	count = gg.getResultsCount()
+	if count == 0 then
+		found_("CA_pointer_search")
+		return 0
+	end
+	vel = gg.getResults(count)
+	gg.clearList()
+	gg.addListItems(vel)
+end
+function CA_apply_offset()
+	if Get_user_input[5] then
+		tanker = 0xfffffffffffffff8
+	else
+		tanker = 0xfffffffffffffff0
+	end
+	local copy = false
+	local l = gg.getListItems()
+	if not copy then gg.removeListItems(l) end
+	for i, v in ipairs(l) do
+		v.address = v.address + tanker
+		if copy then v.name = v.name..' #2' end
+	end
+	gg.loadResults(l)
+	gg.refineNumber("0", gg.TYPE_QWORD, false, gg.SIGN_NOT_EQUAL, 0, -1, 0)	
+	local x =gg.getResults(9999)
+	gg.addListItems(x)
+	gg.clearResults()
+end
+function CA2_apply_offset()
+	if Get_user_input[5] then
+		tanker = 0xfffffffffffffff8
+	else
+		tanker = 0xfffffffffffffff0
+	end
+	local copy = false
+	local l = gg.getListItems()
+	if not copy then gg.removeListItems(l) end
+	for i, v in ipairs(l) do
+		v.address = v.address + tanker
+		if copy then v.name = v.name..' #2' end
+	end
+	gg.loadResults(l)
+	gg.refineNumber("0", gg.TYPE_QWORD, false, gg.SIGN_NOT_EQUAL, 0, -1, 0)	
+	local x =gg.getResults(9999)
+	gg.addListItems(x)
+	gg.clearResults()
+end
+function Q_apply_fix()
+    gg.setRanges(gg.REGION_ANONYMOUS)
+    gg.loadResults(gg.getListItems())
+    gg.clearList()
+    count = gg.getResultsCount()
+    if count == 0 then
+        found_("Q_apply_fix")
+        return 0
+    end
+    yy = gg.getResults(1000)
+    gg.clearResults()
+    i = 1
+    c = 1
+    s = {}
+    while (i-1) < count do
+        yy[i].address = yy[i].address + 0xb400000000000000
+        gg.searchNumber(yy[i].address, gg.TYPE_QWORD)
+        cnt = gg.getResultsCount()
+        if 0 < cnt then
+            bytr = gg.getResults(cnt)
+            n = 1
+            while (n-1) < cnt do
+                s[c] = {}
+                s[c].address = bytr[n].address
+                s[c].flags = 32
+                n = n + 1
+                c = c + 1
+            end
+        end
+        gg.clearResults()
+        i = i + 1
+    end
+    gg.addListItems(s)
+end
+function A_base_value()
+	gg.setRanges(gg.REGION_ANONYMOUS)
+	gg.loadResults(gg.getListItems())
+	gg.clearList()
+	gg.searchPointer(offst)
+	count = gg.getResultsCount()
+	if count == 0 then
+		found_("A_base_value")
+		return 0
+	end
+	tel = gg.getResults(count)
+	gg.addListItems(tel)
+end
+function A_base_accuracy()
+	gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)
+	gg.loadResults(gg.getListItems())
+	gg.clearList()
+	gg.searchPointer(offst)
+	count = gg.getResultsCount()
+	if count == 0 then
+		found_("A_base_accuracy")
+		return 0
+	end
+	kol = gg.getResults(count)
+	i = 1
+	h = {}
+	while (i-1) < count do
+		h[i] = {}
+		h[i].address = kol[i].value
+		h[i].flags = 32
+		i = i + 1
+	end
+	gg.addListItems(h)
+end
+function A_user_given_offset()
+	local old_save_list = gg.getListItems()
+	for i, v in ipairs(old_save_list) do
+		v.address = tonumber(v.address) + (tonumber(Get_user_input[3]) or 0)
+		v.flags = Get_user_type
+	end
+	gg.clearResults()
+	gg.clearList()
+	gg.loadResults(old_save_list)
+	count = gg.getResultsCount()
+	if count == 0 then
+		found_("Q_apply_fix++")
+		return 0
+	end
+end
+--[[ 🔴 Different Functions For 1,2,3,4th try 🔴]]--
+function start()
+	user_input_taker()
+	O_initial_search()
+	O_dinitial_search()
+	if error > 0 then
+		return 0
+	end
+	CA_pointer_search()
+	if error > 0 then
+		return 0
+	end
+	CA_apply_offset()
+	if error > 0 then
+		return 0
+	end
+	A_base_value()
+	if error > 0 then
+		return 0
+	end
+	if offst == 0 then
+		A_base_accuracy()
+	end
+	if error > 0 then
+		return 0
+	end
+	A_user_given_offset()
+	if error > 0 then
+		return 0
+	end
+	loopCheck()
+	if error > 0 then
+		return 0
+	end
+end
+function start2()
+	error = 0
+	O_initial_search()
+	O_dinitial_search()
+	if error > 0 then
+		return 0
+	end
+	CA_pointer_search()
+	if error > 0 then
+		return 0
+	end
+	CA_apply_offset()
+	if error > 0 then
+		return 0
+	end
+	A_base_accuracy()
+	if error > 0 then
+		return 0
+	end
+	A_user_given_offset()
+	if error > 0 then
+		return 0
+	end
+	loopCheck()
+	if error > 0 then
+		return 0
+	end
+end
+function second_start()
+	gg.toast("🟡Hackers House: Second Try")
+	O_dinitial_search()
+	if error > 1 then
+		return 0
+	end
+	CA_pointer_search()
+	if error > 1 then
+		return 0
+	end
+	CA_apply_offset()
+	if error > 1 then
+		return 0
+	end
+	Q_apply_fix()
+	if error > 1 then
+		return 0
+	end
+	if offst == 0 then
+		A_base_accuracy()
+	end
+	if error > 1 then
+		return 0
+	end
+	A_user_given_offset()
+	if error > 1 then
+		return 0
+	end
+	loopCheck()
+	if error > 1 then
+		return 0
+	end
+end
+function third_start()
+	gg.toast("🔴Hackers House: Third Try")
+	O_dinitial_search()
+	if error > 2 then
+		return 0
+	end
+	CA_pointer_search()
+	if error > 2 then
+		return 0
+	end
+	if offst == 0 then
+		CA2_apply_offset()
+	end
+	if error > 2 then
+		return 0
+	end
+	A_base_value()
+	if error > 2 then
+		return 0
+	end
+	if offst == 0 then
+		A_base_accuracy()
+	end
+	if error > 2 then
+		return 0
+	end
+	A_user_given_offset()
+	if error > 2 then
+		return 0
+	end
+	loopCheck()
+	if error > 2 then
+		return 0
+	end
+end
+function fourth_start()
+	gg.toast("☢️Hackers House: Fourth Try")
+	O_dinitial_search()
+	CA_pointer_search()
+	CA2_apply_offset()
+	Q_apply_fix()
+	if offst == 0 then
+		A_base_accuracy()
+	end
+	A_user_given_offset()
+	loopCheck()
+end
+--[[ ℹ️ It will create an UI button and loop until user clicks the UI. If clicked calls start() ]]--
+function UI()
+	gg.setVisible(true)
+	gg.showUiButton()
+	while true do
+		if gg.isClickedUiButton() then
+			gg.setVisible(false)
+			local choice = gg.alert("メインメニュー/Offset Finder", "[←]    メインメニューにもどる")
+			if choice == 1 then
+				mainMenu()
+			end
+			start()
+		end
+	end
+end
+function stopClose()
+	while true do
+		mainMenu()
+		gg.setVisible(false)
+		while gg.isVisible() == false do
+		end
+	end
+end
+if userMode == 2 then
+	stopClose()
+else
+	UI()
+end
+---------------------------------------------------------------------------
