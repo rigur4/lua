@@ -1,0 +1,5338 @@
+--[[
+GameName	:	Monster Hunter Now
+Version		:	67.2
+UpdateDate	:	2024/1/5
+]]--
+--[[ 🔴How To use In your Script ?🔴
+There are 2 modes in this script 1. Developer mode 2. User mode
+The devoper mode is enabled automatically so you don't need to do anything. But if you want to make your own script to allow users to use your script then. Edit the userMode = 1 to userMode = 2. Now you can set your hacks. I have already made a template menu, submenu and functions for you. you can make some minor changes in them. 
+The main function you will use is valueFromClass() where you have to give 5 inputs like this.
+ valueFromClass("Levels", "0x10", false, true, gg.TYPE_FLOAT) 
+The first input is class name , second input is offset, third input is do you want to try harder if yes then set true or false is good, the fourth is for 32 bit if the script is for 32 bit then make it true otherwise leaving it false means the script is 64 bit, the fifth is value type you want to search for you can see that in the dump file. The value at left is the data type in the dump and the values at left is what you have to set in the valueFromClass() function. 
+1. Byte / Boolean --> gg.TYPE_BYTE
+2. Dword / 32 bit Int --> gg.TYPE_DWORD
+3. Qword / 64 bit Int --> gg.TYPE_QWORD
+4. Float --> gg.TYPE_FLOAT
+5. Double --> gg.TYPE_DOUBLE
+userMode = 
+1 = Developer mode, 2 = user mode
+]]--
+userMode = 2
+--------------------------------------
+function temporarilyhide()
+	gg.setVisible(false)
+	while true do
+	if gg.isVisible() then
+		break 
+		end
+	end 
+end
+---------------------------------------
+function mainMenu()
+	gg.clearList()
+	gg.clearResults()	
+	gg.setVisible(false)	
+    firstMenu = gg.choice({
+	"[1]    装備",
+	"[2]    ハンター",
+	"[3]    モンスター",
+	"[4]    マップ",	
+	"[5]    全般設定",
+	"\n[6]    マルチ選択",
+	"[7]    レイド用\n",
+	"[8]    簡易設定",	
+	"\n[9]    Field Offset Finder\n",	
+	"test",
+	"[X]    おわる"
+	}, nil,"メインメニュー\n\nLastUpdated:2024/1/5\nGameName:モンスターハンターなう\nVersion:67.2")
+    if firstMenu == nil then
+		temporarilyhide()	
+		mainMenu()
+	else
+		if firstMenu == 1 then	
+		    userMode = 2
+			Equipment()
+		elseif firstMenu == 2 then			
+		    userMode = 2
+			Hunter()
+		elseif firstMenu == 3 then			
+		    userMode = 2
+			Monster()
+		elseif firstMenu == 4 then
+		    userMode = 2
+			Map()
+		elseif firstMenu == 5 then
+		    userMode = 2
+			GeneralSettings()
+		elseif firstMenu == 6 then
+		    userMode = 2
+            MultiChoice()
+		elseif firstMenu == 7 then
+		    userMode = 2
+			Raid()
+		elseif firstMenu == 8 then
+		    userMode = 2
+			Config()	
+		elseif firstMenu == 10 then
+		    userMode = 2
+valueFromClass("weaponType", "0x18", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~13", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)			    
+		    os.exit()
+		elseif firstMenu == 9 then
+		    userMode = 1
+			gg.setVisible(true)
+			UI()       
+		elseif firstMenu == 11 then
+			os.exit()
+		end
+	end
+end      
+--[[
+--???
+public sealed class FeystoneSpecSettingsProto : IMessage<FeystoneSpecSettingsProto>, IMessage, IEquatable<FeystoneSpecSettingsProto>, IDeepCloneable<FeystoneSpecSettingsProto> // TypeDefIndex: 7129
+	private static readonly MessageParser<FeystoneSpecSettingsProto> _parser; // 0x0
+	public const int FeystoneKindFieldNumber = 1;
+	private MagellanEquipment2Proto.Types.FeystoneKind feystoneKind_; // 0x10
+	public const int NameLocalizationKeyFieldNumber = 8;
+	private string nameLocalizationKey_; // 0x18
+	public const int FeystoneIdFieldNumber = 2;
+	private int feystoneId_; // 0x20
+	public const int IconIdFieldNumber = 3;
+	private int iconId_; // 0x24
+	public const int PointsFieldNumber = 4;
+	private int points_; // 0x28
+	public const int RequiredWalkingDistanceMetersFieldNumber = 7;
+	private int requiredWalkingDistanceMeters_; // 0x2C
+	public const int ZennyFieldNumber = 6;
+	private int zenny_; // 0x30
+	public const int DurationMinutesFieldNumber = 5;
+	private int durationMinutes_; // 0x34
+--装飾品
+public sealed class DecorationSpecSettingsProto : IMessage<DecorationSpecSettingsProto>, IMessage, IEquatable<DecorationSpecSettingsProto>, IDeepCloneable<DecorationSpecSettingsProto> // TypeDefIndex: 7131
+	private static readonly MessageParser<DecorationSpecSettingsProto> _parser; // 0x0
+	public const int DecorationKindFieldNumber = 1;
+	private MagellanEquipment2Proto.Types.EquipmentDecorationKind decorationKind_; // 0x10
+	public const int DecorationKindIdFieldNumber = 2;
+	private int decorationKindId_; // 0x14
+	public const int NormalSkillFieldNumber = 3;
+	private static readonly FieldCodec<ClientSkillProto> _repeated_normalSkill_codec; // 0x8
+	private readonly RepeatedField<ClientSkillProto> normalSkill_; // 0x18
+	public const int IconIdFieldNumber = 4;
+	private string iconId_; // 0x20
+	public const int NameLocalizationKeyFieldNumber = 5;
+	private string nameLocalizationKey_; // 0x28
+	public const int DescriptionLocalizationKeyFieldNumber = 6;
+	private string descriptionLocalizationKey_; // 0x30
+	public const int SortOrderFieldNumber = 7;
+	private int sortOrder_; // 0x38
+	public const int RarityFieldNumber = 8;
+	private int rarity_; // 0x3C
+	public const int LevelFieldNumber = 9;
+	private int level_; // 0x40
+--チャアク	
+private class BattleChargeBladeLogicSetup.SwordEnergyThresholds // TypeDefIndex: 1184
+	// Fields
+	public int max; // 0x10
+	public int over; // 0x14
+	public int red; // 0x18
+	public int yellow; // 0x1C
+	public int min; // 0x20
+public class BattleChargeBladeLogicSetup : ScriptableObject // TypeDefIndex: 1188
+	// Fields
+	[Header("Sword Energy 剣撃エネルギー")]
+	[SerializeField]
+	[Tooltip("剣撃エネルギーの段階閾値")]
+	private BattleChargeBladeLogicSetup.SwordEnergyThresholds m_SwordEnergyThresholds; // 0x18
+	[SerializeField]
+	private int m_SwordEnergyKnockBackSmall; // 0x20
+	[SerializeField]
+	private int m_SwordEnergyKnockBackMedium; // 0x24
+	[SerializeField]
+	private int m_SwordEnergyKnockBackLarge; // 0x28
+	[SerializeField]
+	[Header("剣撃エネルギーが最大を超えた時のエフェクト")]
+	private EffectData[] m_SwordEnergyOverheatEffects; // 0x30
+	[Header("--------------------------------------------------")]
+	[Header("Phials ビン")]
+	[SerializeField]
+	private int m_MaxPhialCount; // 0x38
+	[SerializeField]
+	private int m_PhialsFromEnergyYellow; // 0x3C
+	[SerializeField]
+	private int m_PhialsFromEnergyRed; // 0x40
+	[SerializeField]
+	private BattleChargeBladeLogicSetup.SAEDParameters[] m_SAEDParameters; // 0x48
+	[Header("--------------------------------------------------")]
+	[Header("Element Boost 属性強化（盾強化）")]
+	[Tooltip("ビンごとの属性強化状態維持時間")]
+	[SerializeField]
+	private float m_ElementBoostDurationPerPhial; // 0x50
+	[SerializeField]
+	private float m_ElementBoostDurationMax; // 0x54
+	[SerializeField]
+	private float m_ElementBoostDurationWarningThreshold; // 0x58
+	[SerializeField]
+	private float m_ElementBoostAxeAttackMultiplier; // 0x5C
+	[SerializeField]
+	private float m_ElementBoostGuardLevelIncrement; // 0x60
+	[SerializeField]
+	[Header("属性強化時のリム")]
+	private RimData m_RimElementBoost; // 0x68
+	[SerializeField]
+	[Header("属性強化が切れる直前のリム")]
+	private RimData m_RimElementBoostWarning; // 0x70
+	[SerializeField]
+	[Header("Sword Boost 剣強化")]
+	[Header("--------------------------------------------------")]
+	private float m_SwordBoostDuration; // 0x78
+	[SerializeField]
+	private float m_SwordBoostDurationWarningThreshold; // 0x7C
+	[Header("Power Axe 斧強化")]
+	[Header("--------------------------------------------------")]
+	[SerializeField]
+	private float m_PowerAxeDurationPerPhialImpact; // 0x80
+	[SerializeField]
+	private float m_PowerAxeDurationPerPhialPowerElement; // 0x84
+]]--
+--	メインメニュー/	装備	--
+	function Equipment()
+		gg.clearList()
+		gg.clearResults()		
+		gg.setVisible(false)	
+		EquipmentMenu = gg.choice({
+		"[1]    全武器強化レベル",
+		"[2]    全防具強化レベル",		
+		"[3]    全武器性能",
+		"[4]    全武器属性種類",
+		"[5]    全防具性能",
+		"[6]    全防具属性種類",		
+		"[7]    ガード性能*",			
+		"[8]    双剣性質*",
+		"[9]    太刀性質*",		
+		"[10]    ハンマー性質*",				
+		"[11]    ボウガン性能",
+		"[12]    ボウガン弾薬種類",		
+		"[13]    弓矢種類種類",
+		"[←]    もどる"
+		}, nil,"メインメニュー/装備\n*該当する装備をしてから実行すること")
+		if EquipmentMenu == nil then
+			temporarilyhide()	
+			Equipment()
+		else
+			if EquipmentMenu == 1 then	
+				gg.setVisible(false)			
+				valueFromClass("UserHunterWeapon", "0x2C", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("1~5", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)	
+				Equipment_AllWeaponLevel()
+			elseif EquipmentMenu == 2 then
+				gg.setVisible(false)
+				valueFromClass("UserHunterArmor", "0x2C", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)
+				gg.refineNumber("1~5", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				Equipment_AllArmorLevel()
+			elseif EquipmentMenu == 3 then	
+				gg.setVisible(false)			
+				valueFromClass("WeaponLevelSpecSettingsProto", "0x14", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)				
+				Equipment_AllWeaponSpec()
+			elseif EquipmentMenu == 4 then
+				gg.setVisible(false)
+				valueFromClass("WeaponSpecSettingsProto", "0x1C", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)
+				gg.refineNumber("1~10", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				Equipment_AllWeaponElementType()
+			elseif EquipmentMenu == 5 then
+				gg.setVisible(false)
+				valueFromClass("ArmorLevelSpecSettingsProto", "0x14", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Equipment_AllArmorSpec()				
+			elseif EquipmentMenu == 6 then	
+				gg.setVisible(false)
+				valueFromClass("ArmorSpecSettingsProto", "0x1C", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Equipment_AllArmorElementType()
+			elseif EquipmentMenu == 7 then			
+				Equipment_Guard()				
+			elseif EquipmentMenu == 8 then	
+				gg.setVisible(false)
+				valueFromClass("BattleDualBladesLogicSetup", "0x38", false, false, gg.TYPE_FLOAT)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Equipment_DualBladesLogic()				
+			elseif EquipmentMenu == 9 then	
+				gg.setVisible(false)
+				valueFromClass("BattleLongSwordLogicSetup", "0x18", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Equipment_LongSwordLogic()	
+			elseif EquipmentMenu == 10 then	
+				gg.setVisible(false)
+				valueFromClass("BattleHammerLogicSetup", "0x18", false, false, gg.TYPE_FLOAT)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Equipment_HammerLogic()	
+			elseif EquipmentMenu == 11 then
+				gg.setVisible(false)
+				valueFromClass("BowgunAmmoSpec", "0x18", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Equipment_BowgunSpec()
+			elseif EquipmentMenu == 12 then
+				gg.setVisible(false)
+				valueFromClass("BowgunAmmoSettingsProto", "0x10", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)	
+				Equipment_BowgunAmmo()
+			elseif EquipmentMenu == 13 then							
+				gg.setVisible(false)
+				valueFromClass("BowArrowSettingsProto", "0x14", false, false, gg.TYPE_DWORD)
+				gg.getResults(9999)	
+				gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)	
+				Equipment_BowArrow()	
+			elseif EquipmentMenu == 14 then
+				mainMenu()
+			end
+		end
+	end
+--	メインメニュー/	装備/	全武器強化レベル	--
+        function Equipment_AllWeaponLevel()
+			gg.getResults(9999)				
+		    gg.setVisible(false)
+			local AllWeaponLevelValues = {"5"}	
+		    EquipmentAllWeaponLevelMenu = gg.choice({
+		    "[1]    アップグレード可能",
+		    "[2]    任意の値",
+		    "[←]    もどる"
+		    }, nil,"メインメニュー/装備/全武器強化レベル")
+		    if EquipmentAllWeaponLevelMenu == nil then
+			    temporarilyhide()	
+			    Equipment_AllWeaponLevel()
+		    else
+			    if EquipmentAllWeaponLevelMenu == 1 then	
+					local chosenValue = AllWeaponLevelValues[EquipmentAllWeaponLevelMenu]
+				    gg.editAll(chosenValue,gg.TYPE_DWORD)
+				    Equipment_AllWeaponLevel()
+				elseif EquipmentAllWeaponLevelMenu == 2 then    
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "全武器強化レベルを入力\n(範囲:1~5,Dword)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_DWORD)
+							break
+						else
+							temporarilyhide()
+						end
+					end		        
+					Equipment_AllWeaponLevel()
+		        elseif EquipmentAllWeaponLevelMenu == 3 then
+		            Equipment()
+		        end
+		    end
+	    end	
+--	メインメニュー/	装備/	全防具強化レベル	--
+        function Equipment_AllArmorLevel()
+			gg.getResults(9999)	
+		    gg.setVisible(false)
+			local AllArmorLevelValues = {"5"}	
+		    EquipmentAllArmorLevelMenu = gg.choice({
+		    "[1]    アップグレード可能",
+		    "[2]    任意の値",
+		    "[←]    もどる"
+		    }, nil,"メインメニュー/装備/全防具強化レベル")
+		    if EquipmentAllArmorLevelMenu == nil then
+			    temporarilyhide()	
+			    Equipment_AllArmorLevel()
+		    else
+			    if EquipmentAllArmorLevelMenu == 1 then	
+					local chosenValue = AllArmorLevelValues[EquipmentAllArmorLevelMenu]
+				    gg.editAll(chosenValue,gg.TYPE_DWORD)
+				    Equipment_AllArmorLevel()
+		        elseif EquipmentAllArmorLevelMenu == 2 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "全防具強化レベルを入力\n(範囲:1~5,Dword)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_DWORD)
+							break
+						else
+							temporarilyhide()
+						end
+					end		        
+		            Equipment_AllArmorLevel()
+		        elseif EquipmentAllArmorLevelMenu == 3 then
+		            Equipment()
+		        end
+		    end
+	    end
+--	メインメニュー/	装備/	全武器性能	--
+		function Equipment_AllWeaponSpec()
+			gg.clearResults()	
+			local offsets = {0x8, 0xC, 0x10}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end
+			gg.setVisible(false)
+			local EquipmentAllWeaponSpecMenu = gg.choice({
+				"[1]    攻撃値",
+				"[2]    属性攻撃値",
+				"[3]    会心率",
+				"[←]    もどる"
+			}, nil, "メインメニュー/装備/全武器性能")
+			if EquipmentAllWeaponSpecMenu == nil then
+				temporarilyhide()	
+				Equipment_AllWeaponSpec()
+			else
+				if EquipmentAllWeaponSpecMenu == 1 then
+					applyOffset(offsets[1])
+					gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+					Equipment_AllWeaponSpec_Attack()
+				elseif EquipmentAllWeaponSpecMenu == 2 then
+					applyOffset(offsets[2])
+					gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+					Equipment_AllWeaponSpec_ElementAttack()
+				elseif EquipmentAllWeaponSpecMenu == 3 then
+					applyOffset(offsets[3])
+					gg.refineNumber("-100~100", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+					Equipment_AllWeaponSpec_Critical()
+				elseif EquipmentAllWeaponSpecMenu == 4 then
+					Equipment()
+				end
+			end
+		end
+--	メインメニュー/	装備/	全武器性能/	攻撃値	--		
+			function Equipment_AllWeaponSpec_Attack()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local AttackValues = {"3,000", "12,000", "30,000,000"}
+				EquipmentAllWeaponSpecAttackMenu = gg.choice({
+					"[1]    " .. AttackValues[1],
+					"[2]    " .. AttackValues[2],
+					"[3]    " .. AttackValues[3],
+					"[4]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/全武器性能/攻撃値")
+				if EquipmentAllWeaponSpecAttackMenu == nil then
+					temporarilyhide()
+					Equipment_AllWeaponSpec_Attack()
+				else
+					if EquipmentAllWeaponSpecAttackMenu >= 1 and EquipmentAllWeaponSpecAttackMenu <= 3 then
+						local chosenValue = AttackValues[EquipmentAllWeaponSpecAttackMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_AllWeaponSpec_Attack()
+					elseif EquipmentAllWeaponSpecAttackMenu == 4 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "武器攻撃値を入力\n(Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_AllWeaponSpec_Attack()
+					elseif EquipmentAllWeaponSpecAttackMenu == 5 then
+						Equipment_AllWeaponSpec()
+					end
+				end
+			end
+--	メインメニュー/	装備/	全武器性能/	属性攻撃値	--
+			function Equipment_AllWeaponSpec_ElementAttack()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local ElementAttackValues = {"1,500", "6,000", "15,000,000"}
+				EquipmentAllWeaponSpecElementAttackMenu = gg.choice({
+					"[1]    " .. ElementAttackValues[1],
+					"[2]    " .. ElementAttackValues[2],
+					"[3]    " .. ElementAttackValues[3],
+					"[4]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/全武器性能/属性攻撃値")
+				if EquipmentAllWeaponSpecElementAttackMenu == nil then
+					temporarilyhide()
+					Equipment_AllWeaponSpec_ElementAttack()
+				else
+					if EquipmentAllWeaponSpecElementAttackMenu >= 1 and EquipmentAllWeaponSpecElementAttackMenu <= 3 then
+						local chosenValue = ElementAttackValues[EquipmentAllWeaponSpecElementAttackMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_AllWeaponSpec_ElementAttack()
+					elseif EquipmentAllWeaponSpecElementAttackMenu == 4 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "武器属性攻撃値を入力\n(Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)									
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_AllWeaponSpec_ElementAttack()
+					elseif EquipmentAllWeaponSpecElementAttackMenu == 5 then
+						Equipment_AllWeaponSpec()
+					end
+				end
+			end			
+--	メインメニュー/	装備/	全武器性能/	会心率	--		
+			function Equipment_AllWeaponSpec_Critical()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local CriticalValues = {"30", "100"}
+				EquipmentAllWeaponSpecCriticalMenu = gg.choice({
+					"[1]    " .. CriticalValues[1],
+					"[2]    " .. CriticalValues[2],
+					"[3]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/全武器性能/会心率")
+				if EquipmentAllWeaponSpecCriticalMenu == nil then
+					temporarilyhide()
+					Equipment_AllWeaponSpec_Critical()
+				else
+					if EquipmentAllWeaponSpecCriticalMenu >= 1 and EquipmentAllWeaponSpecCriticalMenu <= 2 then
+						local chosenValue = CriticalValues[EquipmentAllWeaponSpecCriticalMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_AllWeaponSpec_Critical()
+					elseif EquipmentAllWeaponSpecCriticalMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "武器会心率を入力\n(範囲:-100～100,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)									
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_AllWeaponSpec_Critical()
+					elseif EquipmentAllWeaponSpecCriticalMenu == 4 then
+						Equipment_AllWeaponSpec()
+					end
+				end
+			end	
+--	メインメニュー/	装備/	全武器属性種類	--
+		function Equipment_AllWeaponElementType()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local ElementType = {
+				"[1]    なし", "[2]    火", "[3]    水", "[4]    雷", "[5]    氷",
+				"[6]    龍", "[7]    毒", "[8]    麻痺", "[9]    睡眠", "[10]    爆破",
+				"[11]    任意の値",				
+				"[←]    もどる"
+			}
+			EquipmentAllWeaponElementTypeMenu = gg.choice(ElementType, nil, "メインメニュー/ハンター/全武器属性種類")
+			if EquipmentAllWeaponElementTypeMenu == nil then
+				temporarilyhide()
+				Equipment_AllWeaponElementType()
+			else
+				if EquipmentAllWeaponElementTypeMenu >= 1 and EquipmentAllWeaponElementTypeMenu <= 10 then
+					local chosenValue = tostring(EquipmentAllWeaponElementTypeMenu)
+					gg.editAll(chosenValue, gg.TYPE_DWORD)
+					Equipment_AllWeaponElementType()
+				elseif EquipmentAllWeaponElementTypeMenu == 11 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "全武器属性種類を入力\n(範囲:1~10,1:なし,2:火,3:水,4雷,5:氷,6:龍,7:毒,8:麻痺,9:睡眠,10:爆破,Dword)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_DWORD)
+							break
+						else
+							temporarilyhide()
+						end
+					end				
+					Equipment_AllWeaponElementType()
+				elseif EquipmentAllWeaponElementTypeMenu == 12 then
+					Equipment()
+				end
+			end
+		end		
+	--	メインメニュー/	装備/	全防具性能	--	
+		function Equipment_AllArmorSpec()
+			gg.clearResults()		
+			local offsets = {0x8, 0xC}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end		
+			gg.setVisible(false)
+			EquipmentAllArmorSpecMenu = gg.choice({
+			"[1]    防御値",
+			"[2]    属性防御値",
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/全防具性能")
+			if EquipmentAllArmorSpecMenu == nil then
+				temporarilyhide()	
+				Equipment_AllArmorSpec()
+			else
+				if EquipmentAllArmorSpecMenu == 1 then	
+					applyOffset(offsets[1])
+					gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)		
+					Equipment_AllArmorSpec_Defence()
+				elseif EquipmentAllArmorSpecMenu == 2 then	
+					applyOffset(offsets[2])
+					gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)				
+					Equipment_AllArmorSpec_ElementDefence()
+				elseif EquipmentAllArmorSpecMenu == 3 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	全防具性能/	防御値	--	
+			function Equipment_AllArmorSpec_Defence()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local DefenceValues = {"3,00", "1,200", "3,000,000"}
+				EquipmentAllArmorSpecDefenceMenu = gg.choice({
+					"[1]    " .. DefenceValues[1],
+					"[2]    " .. DefenceValues[2],
+					"[3]    " .. DefenceValues[3],
+					"[4]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/全防具性能/防御値")
+				if EquipmentAllArmorSpecDefenceMenu == nil then
+					temporarilyhide()
+					Equipment_AllArmorSpec_Defence()
+				else
+					if EquipmentAllArmorSpecDefenceMenu >= 1 and EquipmentAllArmorSpecDefenceMenu <= 3 then
+						local chosenValue = DefenceValues[EquipmentAllArmorSpecDefenceMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_AllArmorSpec_Defence()
+					elseif EquipmentAllArmorSpecDefenceMenu == 4 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "防具防御値を入力\n(Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_AllArmorSpec_Defence()
+					elseif EquipmentAllArmorSpecDefenceMenu == 5 then
+						Equipment_AllArmorSpec()
+					end
+				end
+			end
+--	メインメニュー/	装備/	全防具性能/	属性防御値	--			
+			function Equipment_AllArmorSpec_ElementDefence()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local ElementDefenceValues = {"150", "600", "1,500,000"}
+				EquipmentAllArmorSpecElementDefenceMenu = gg.choice({
+					"[1]    " .. ElementDefenceValues[1],
+					"[2]    " .. ElementDefenceValues[2],
+					"[3]    " .. ElementDefenceValues[3],
+					"[4]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/全防具性能/属性防御値")
+				if EquipmentAllArmorSpecElementDefenceMenu == nil then
+					temporarilyhide()
+					Equipment_AllArmorSpec_ElementDefence()
+				else
+					if EquipmentAllArmorSpecElementDefenceMenu >= 1 and EquipmentAllArmorSpecElementDefenceMenu <= 3 then
+						local chosenValue = ElementDefenceValues[EquipmentAllArmorSpecElementDefenceMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_AllArmorSpec_ElementDefence()
+					elseif EquipmentAllArmorSpecElementDefenceMenu == 4 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "防具属性防御値を入力\n(Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)									
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_AllArmorSpec_ElementDefence()
+					elseif EquipmentAllArmorSpecElementDefenceMenu == 5 then
+						Equipment_AllArmorSpec()
+					end
+				end
+			end		
+--	メインメニュー/	装備/	全防具属性種類	--			
+		function Equipment_AllArmorElementType()
+			gg.clearResults(9999)
+            local resultList = gg.getListItems()
+            local modifiedResults = {}
+            for _, result in ipairs(resultList) do
+                table.insert(modifiedResults, {address = result.address, value = result.value, flags = result.flags})
+            end
+            gg.loadResults(modifiedResults)    
+            gg.getResults(9999)
+			gg.setVisible(false)		
+			local AllArmorElementType = {
+				"[1]    なし", "[2]    火", "[3]    水", "[4]    雷", "[5]    氷",
+				"[6]    龍", "[7]    毒", "[8]    麻痺", "[9]    睡眠", "[10]    爆破",
+				"[11]    任意の値",
+				"[←]    もどる"
+			}
+			EquipmentAllArmorElementTypeMenu = gg.choice(AllArmorElementType, nil, "メインメニュー/ハンター/全防具属性種類")
+			if EquipmentAllArmorElementTypeMenu == nil then
+				temporarilyhide()
+				Equipment_AllArmorElementType()
+			else
+				if EquipmentAllArmorElementTypeMenu >= 1 and EquipmentAllArmorElementTypeMenu <= 10 then
+					local chosenValue = tostring(EquipmentAllArmorElementTypeMenu)
+					gg.editAll(chosenValue, gg.TYPE_DWORD)
+					Equipment_AllArmorElementType()
+				elseif EquipmentAllArmorElementTypeMenu == 11 then	
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "全防具属性種類を入力\n(範囲:1~10,1:なし,2:火,3:水,4雷,5:氷,6:龍,7:毒,8:麻痺,9:睡眠,10:爆破,Dword)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_DWORD)
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					Equipment_AllArmorElementType()
+				elseif EquipmentAllArmorElementTypeMenu == 12 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	ガード性能	--
+        function Equipment_Guard()
+			gg.clearList()
+			gg.clearResults()			
+		    gg.setVisible(false)
+		    EquipmentGuardMenu = gg.choice({
+		    "[1]    リアクションタイプ",
+		    "[←]    もどる"
+		    }, nil,"メインメニュー/装備/ガード性能")
+		    if EquipmentguardMenu == nil then
+			    temporarilyhide()	
+			    Equipment_Guard()
+		    else
+			    if EquipmentGuardMenu == 1 then	
+					gg.setVisible(false)			
+					valueFromClass("GuardSequenceClip", "0x28", false, false, gg.TYPE_DWORD)
+					local results = gg.getResults(9999)
+					gg.addListItems(results)	
+				    Equipment_Guard_ReactionType()
+				elseif EquipmentGuardMenu == 2 then    
+		            Equipment()
+		        end
+		    end
+	    end	
+--	メインメニュー/	装備/	ガード性能/	リアクションタイプ		--
+		function Equipment_Guard_ReactionType()
+			gg.clearResults()
+			local offsets = {0x0, 0x8, 0x10}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end
+			gg.setVisible(false)
+			EquipmentGuardReactionTypeMenu = gg.choice({
+			"[1]    小",
+			"[2]    中",
+			"[3]    大",
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/ガード時のリアクションタイプ\nガードできる装備をしてから\n再変更する時は武器チェンを何度か行ってから")
+			if EquipmentGuardReactionTypeMenu == nil then
+				temporarilyhide()	
+				Equipment_Guard_ReactionType()
+			else
+				if EquipmentGuardReactionTypeMenu == 1 then	
+					applyOffset(offsets[1])
+					gg.searchNumber("YourSearchValue", gg.TYPE_DWORD)
+					local resultList = gg.getResults(9999)
+					if resultList and #resultList > 0 then
+						local initialValue = resultList[1].value
+						for _, result in ipairs(resultList) do
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)
+							applyOffset(offsets[2])
+							gg.getResults(9999)
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)	
+							applyOffset(offsets[3])
+							gg.getResults(9999)
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)
+							end
+						else
+							print("Not Found")
+						end
+							Equipment_Guard_ReactionType()
+					elseif EquipmentGuardReactionTypeMenu == 2 then	
+						applyOffset(offsets[2])
+						gg.searchNumber("YourSearchValue", gg.TYPE_DWORD)
+						local resultList = gg.getResults(9999)
+						if resultList and #resultList > 0 then
+							local initialValue = resultList[1].value
+							for _, result in ipairs(resultList) do
+								gg.editAll(tostring(initialValue), gg.TYPE_DWORD)
+							applyOffset(offsets[1])
+							gg.getResults(9999)
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)	
+							applyOffset(offsets[3])
+							gg.getResults(9999)
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)
+							end
+						else
+							print("Not Found")
+						end
+							Equipment_Guard_ReactionType()
+					elseif EquipmentGuardReactionTypeMenu == 3 then	
+						applyOffset(offsets[3])
+						gg.searchNumber("YourSearchValue", gg.TYPE_DWORD)
+						local resultList = gg.getResults(9999)
+						if resultList and #resultList > 0 then
+							local initialValue = resultList[1].value
+							for _, result in ipairs(resultList) do
+								gg.editAll(tostring(initialValue), gg.TYPE_DWORD)
+							applyOffset(offsets[1])
+							gg.getResults(9999)
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)	
+							applyOffset(offsets[2])
+							gg.getResults(9999)
+							gg.editAll(tostring(initialValue), gg.TYPE_DWORD)
+							end
+						else
+							print("Not Found")
+						end
+							Equipment_Guard_ReactionType()
+					elseif EquipmentGuardReactionTypeMenu == 4 then
+						Equipment_Guard()
+					end
+				end
+			end	  
+--	メインメニュー/	装備/	双剣性質	--
+		function Equipment_DualBladesLogic()
+			gg.clearResults()	
+			local offsets = {0x0, 0x4}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+			end		
+			gg.setVisible(false)	
+			EquipmentDualBladesLogicMenu = gg.choice({
+			"[1]    鬼人化時のスタミナ維持時間",
+			"[2]    鬼人化に必要なスタミナ回復時間",
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/双剣性質")
+			if EquipmentDualBladesLogicMenu == nil then
+				temporarilyhide()	
+				Equipment_DualBladesLogic()
+			else
+				if EquipmentDualBladesLogicMenu == 1 then
+					applyOffset(offsets[1])
+					Equipment_DualBladesLogic_DemonModeStaminaConsumptionTime()
+				elseif EquipmentDualBladesLogicMenu == 2 then	
+					applyOffset(offsets[2])
+					Equipment_DualBladesLogic_NormalModeStaminaRecoveryTime()
+				elseif EquipmentDualBladesLogicMenu == 3 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	双剣性質/	鬼人化時のスタミナ維持時間	--
+			function Equipment_DualBladesLogic_DemonModeStaminaConsumptionTime()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local StaminaConsumptionTime = {"15", "120"}
+				EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    120秒",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/双剣性質/鬼人化時のスタミナ維持時間")
+				if EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu == nil then
+					temporarilyhide()	
+					Equipment_DualBladesLogic_DemonModeStaminaConsumptionTime()
+				else	
+					if EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu >= 1 and EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu <= 2 then
+						local chosenValue = StaminaConsumptionTime[EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Equipment_DualBladesLogic_DemonModeStaminaConsumptionTime()
+					else
+						if EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "双剣の鬼人化時のスタミナ維持時間を入力\n(秒[s],デフォ:15,Float)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_FLOAT)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Equipment_DualBladesLogic_DemonModeStaminaConsumptionTime()
+						elseif EquipmentDualBladesLogicDemonModeStaminaConsumptionTimeMenu == 4 then
+							Equipment_DualBladesLogic()
+						end	
+					end
+				end
+			end
+--	メインメニュー/	装備/	双剣性質/	鬼人化に必要なスタミナ回復時間	--
+			function Equipment_DualBladesLogic_NormalModeStaminaRecoveryTime()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local StaminaRecoveryTime = {"15", "0"}
+				EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    不要",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/双剣性質/鬼人化に必要なスタミナ回復時間")
+				if EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu == nil then
+					temporarilyhide()	
+					Equipment_DualBladesLogic_NormalModeStaminaRecoveryTime()
+				else	
+					if EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu >= 1 and EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu <= 2 then
+						local chosenValue = StaminaRecoveryTime[EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Equipment_DualBladesLogic_NormalModeStaminaRecoveryTime()
+					else
+						if EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "双剣の鬼人化に必要なスタミナ回復時間を入力\n(秒[s],デフォ:15,Float)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_FLOAT)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Equipment_DualBladesLogic_NormalModeStaminaRecoveryTime()
+						elseif EquipmentDualBladesLogicNormalModeStaminaRecoveryTimeMenu == 4 then
+							Equipment_DualBladesLogic()
+						end	
+					end
+				end
+			end		
+--	メインメニュー/	装備/	太刀性質	--
+		function Equipment_LongSwordLogic()
+			gg.clearResults()
+			local function loadResultsWithOffsetAndType(offset, valueType)
+				local resultList = gg.getListItems()
+				local modifiedResults = {}
+				for _, result in ipairs(resultList) do
+					local modifiedAddress = result.address + offset
+					table.insert(modifiedResults, {address = modifiedAddress, value = result.value, flags = valueType})
+				end
+				gg.loadResults(modifiedResults)
+			end			
+			gg.setVisible(false)
+			EquipmentSpecBowgunSpecMenu = gg.choice({
+				"[1]    最大練気量",
+				"[2]    兜割が出せる閾値",
+				"[3]    練気が消費され始める迄の猶予",
+				"[←]    もどる"
+			}, nil, "メインメニュー/装備/太刀性質")
+
+			if EquipmentSpecBowgunSpecMenu == nil then
+				temporarilyhide()
+				Equipment_LongSwordLogic()
+			else
+				if EquipmentSpecBowgunSpecMenu == 1 then
+					loadResultsWithOffsetAndType(0x0, gg.TYPE_DWORD)
+					Equipment_LongSwordLogic_MaxSpirits()
+				elseif EquipmentSpecBowgunSpecMenu == 2 then
+					loadResultsWithOffsetAndType(0x4, gg.TYPE_DWORD)
+					Equipment_LongSwordLogic_RequireSpiritsForHelmBreaker()
+				elseif EquipmentSpecBowgunSpecMenu == 3 then
+					loadResultsWithOffsetAndType(0x38, gg.TYPE_FLOAT)
+					Equipment_LongSwordLogic_SpiritCostGracePeriod()
+				elseif EquipmentSpecBowgunSpecMenu == 4 then
+					Equipment()
+				end
+			end
+		end	
+-- メインメニュー/装備/太刀性質/最大練気量
+			function Equipment_LongSwordLogic_MaxSpirits()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local MaxSpirit = {"200"}
+				EquipmentLongSwordLogicMaxSpiritsMenu = gg.choice({
+					"[1]    デフォルト",
+					"[2]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/装備/太刀性質/最大練気量")
+				if EquipmentLongSwordLogicMaxSpiritsMenu == nil then
+					temporarilyhide()
+					Equipment_LongSwordLogic_MaxSpirits()
+				else
+					if EquipmentLongSwordLogicMaxSpiritsMenu == 1 then
+						local chosenValue = MaxSpirit[1]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_LongSwordLogic_MaxSpirits()
+					elseif EquipmentLongSwordLogicMaxSpiritsMenu == 2 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "太刀の最大練気量を入力\n(デフォ:200,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_LongSwordLogic_MaxSpirits()
+					elseif EquipmentLongSwordLogicMaxSpiritsMenu == 3 then
+						Equipment_LongSwordLogic()
+					end
+				end
+			end
+--	メインメニュー/	装備/	太刀性質/	兜割が出せる閾値	--
+			function Equipment_LongSwordLogic_RequireSpiritsForHelmBreaker()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local RequireSpiritsForHelmBreaker = {"140","1"}
+				EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    即可能",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/太刀性質/兜割が出せる閾値")
+				if EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu == nil then
+					temporarilyhide()	
+					Equipment_LongSwordLogic_RequireSpiritsForHelmBreaker()
+				else	
+					if EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu >= 1 and EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu <= 2 then
+						local chosenValue = RequireSpiritsForHelmBreaker[EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_LongSwordLogic_RequireSpiritsForHelmBreaker()
+					else
+						if EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "太刀の兜割が出せる閾値を入力\n(デフォ:140,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Equipment_LongSwordLogic_RequireSpiritsForHelmBreaker()
+						elseif EquipmentLongSwordLogicRequireSpiritsForHelmBreakerMenu == 4 then
+							Equipment_LongSwordLogic()
+						end	
+					end
+				end
+			end		
+--	メインメニュー/	装備/	太刀性質/	練気が消費され始める迄の猶予	--
+			function Equipment_LongSwordLogic_SpiritCostGracePeriod()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local SpiritCostGracePeriod = {"2", "120"}
+				EquipmentLongSwordLogicSpiritCostGracePeriodMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    120秒",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/太刀性質/練気が消費され始める迄の猶予")
+				if EquipmentLongSwordLogicSpiritCostGracePeriodMenu == nil then
+					temporarilyhide()	
+					Equipment_LongSwordLogic_SpiritCostGracePeriod()
+				else	
+					if EquipmentLongSwordLogicSpiritCostGracePeriodMenu >= 1 and EquipmentLongSwordLogicSpiritCostGracePeriodMenu <= 2 then
+						local chosenValue = SpiritCostGracePeriod[EquipmentLongSwordLogicSpiritCostGracePeriodMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Equipment_LongSwordLogic_SpiritCostGracePeriod()
+					else
+						if EquipmentLongSwordLogicSpiritCostGracePeriodMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "太刀の練気が消費され始める迄の猶予を入力\n(秒[s],デフォ:2,Float)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_FLOAT)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Equipment_LongSwordLogic_SpiritCostGracePeriod()
+						elseif EquipmentLongSwordLogicSpiritCostGracePeriodMenu == 4 then
+							Equipment_LongSwordLogic()
+						end	
+					end
+				end
+			end	
+--	メインメニュー/	装備/	ハンマー性質	--
+		function Equipment_HammerLogic()
+			gg.clearResults()	
+			local offsets = {0x0, 0x4}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+			end		
+			gg.setVisible(false)	
+			EquipmentHammerLogicMenu = gg.choice({
+			"[1]    チャージ時のスタミナ消費量",
+			"[2]    スタミナ回復量",
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/ハンマー性質")
+			if EquipmentHammerLogicMenu == nil then
+				temporarilyhide()	
+				Equipment_HammerLogic()
+			else
+				if EquipmentHammerLogicMenu == 1 then
+					applyOffset(offsets[1])
+					Equipment_HammerLogic_StaminaPerSecInCharge()
+				elseif EquipmentHammerLogicMenu == 2 then	
+					applyOffset(offsets[2])
+					Equipment_HammerLogic_RechargeStaminaPerSec()
+				elseif EquipmentHammerLogicMenu == 3 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	ハンマー性質/	チャージ時のスタミナ消費量	--
+			function Equipment_HammerLogic_StaminaPerSecInCharge()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local StaminaPerSecInCharge = {"100", "0"}
+				EquipmentHammerLogicStaminaPerSecInChargeMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    なし",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/ハンマー性質/チャージ時のスタミナ消費量")
+				if EquipmentHammerLogicStaminaPerSecInChargeMenu == nil then
+					temporarilyhide()	
+					Equipment_HammerLogic_StaminaPerSecInCharge()
+				else	
+					if EquipmentHammerLogicStaminaPerSecInChargeMenu >= 1 and EquipmentHammerLogicStaminaPerSecInChargeMenu <= 2 then
+						local chosenValue = StaminaPerSecInCharge[EquipmentHammerLogicStaminaPerSecInChargeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Equipment_HammerLogic_StaminaPerSecInCharge()
+					else
+						if EquipmentHammerLogicStaminaPerSecInChargeMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンマーのチャージ時のスタミナ消費量を入力\n(デフォ:100,Float)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_FLOAT)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Equipment_HammerLogic_StaminaPerSecInCharge()
+						elseif EquipmentHammerLogicStaminaPerSecInChargeMenu == 4 then
+							Equipment_HammerLogic()
+						end	
+					end
+				end
+			end			
+--	メインメニュー/	装備/	ハンマー性質/	スタミナ回復量	--
+			function Equipment_HammerLogic_RechargeStaminaPerSec()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local RechargeStaminaPerSec = {"100", "99999"}
+				EquipmentHammerLogicRechargeStaminaPerSecMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    超回復",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/ハンマー性質/スタミナ回復量")
+				if EquipmentHammerLogicRechargeStaminaPerSecMenu == nil then
+					temporarilyhide()	
+					Equipment_HammerLogic_RechargeStaminaPerSec()
+				else	
+					if EquipmentHammerLogicRechargeStaminaPerSecMenu >= 1 and EquipmentHammerLogicRechargeStaminaPerSecMenu <= 2 then
+						local chosenValue = RechargeStaminaPerSec[EquipmentHammerLogicRechargeStaminaPerSecMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Equipment_HammerLogic_RechargeStaminaPerSec()
+					else
+						if EquipmentHammerLogicRechargeStaminaPerSecMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンマーのスタミナ回復量を入力\n(秒[s],デフォ:15,Float)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_FLOAT)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Equipment_HammerLogic_RechargeStaminaPerSec()
+						elseif EquipmentHammerLogicRechargeStaminaPerSecMenu == 4 then
+							Equipment_HammerLogic()
+						end	
+					end
+				end
+			end				
+--	メインメニュー/	装備/	ボウガン性能	--
+		function Equipment_BowgunSpec()
+			gg.clearResults()	
+			local offsets = {0x0, 0x4, 0x8}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+			end		
+			gg.setVisible(false)	
+			EquipmentSpecBowgunSpecMenu = gg.choice({
+			"[1]    反動パターン",
+			"[2]    装填パターン",
+			"[3]    残弾数",
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/ボウガン性能")
+			if EquipmentSpecBowgunSpecMenu == nil then
+				temporarilyhide()	
+				Equipment_BowgunSpec()
+			else
+				if EquipmentSpecBowgunSpecMenu == 1 then
+					applyOffset(offsets[1])
+					Equipment_BowgunSpec_RecoilType()
+				elseif EquipmentSpecBowgunSpecMenu == 2 then	
+					applyOffset(offsets[2])
+					Equipment_BowgunSpec_ReloadType()
+				elseif EquipmentSpecBowgunSpecMenu == 3 then
+					applyOffset(offsets[3])
+					Equipment_BowgunSpec_capacity()
+				elseif EquipmentSpecBowgunSpecMenu == 4 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	ボウガン性能/	反動パターン	--
+			function Equipment_BowgunSpec_RecoilType()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local RecoilType = {
+				"[1]    パターン1   (最小)",
+				"[2]    パターン2",
+				"[3]    パターン3",
+				"[4]    パターン4   (最大)",	
+				"[5]    任意の値",	
+				"[←]    もどる"
+				}
+				EquipmentBowgunSpecRecoilTypeMenu = gg.choice(RecoilType, nil, "メインメニュー/装備/ボウガン性能/反動パターン")
+				if EquipmentBowgunSpecRecoilTypeMenu == nil then
+					temporarilyhide()	
+					Equipment_BowgunSpec_RecoilType()
+				else	
+					if EquipmentBowgunSpecRecoilTypeMenu >= 1 and EquipmentBowgunSpecRecoilTypeMenu <= 4 then
+						local chosenValue = tostring(EquipmentBowgunSpecRecoilTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_BowgunSpec_RecoilType()
+					elseif EquipmentBowgunSpecRecoilTypeMenu == 5 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの反動パターンを入力\n(範囲:1~4,1:小,2:中,3:大,4:特大,DWORD)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_BowgunSpec_RecoilType()
+					elseif EquipmentBowgunSpecRecoilTypeMenu == 6 then
+						Equipment_BowgunSpec()
+					end	
+				end
+			end	
+--	メインメニュー/	装備/	ボウガン性能/	装填パターン	--
+			function Equipment_BowgunSpec_ReloadType()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local ReloadType = {
+				"[1]    パターン1   (最短)",
+				"[2]    パターン2",
+				"[3]    パターン3",
+				"[4]    パターン4   (最長)",	
+				"[5]    任意の値",	
+				"[←]    もどる"
+				}
+				EquipmentBowgunSpecReloadTypeMenu = gg.choice(ReloadType, nil,"メインメニュー/装備/ボウガン性能/装填パターン")
+				if EquipmentBowgunSpecReloadTypeMenu == nil then
+					temporarilyhide()	
+					Equipment_BowgunSpec_ReloadType()
+				else	
+					if EquipmentBowgunSpecReloadTypeMenu >= 1 and EquipmentBowgunSpecReloadTypeMenu <= 4 then
+						local chosenValue = tostring(EquipmentBowgunSpecReloadTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_BowgunSpec_ReloadType()	
+					elseif EquipmentBowgunSpecReloadTypeMenu == 5 then	
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの装填パターンを入力\n(範囲:1~4,1:小,2:中,3:大,4:特大,DWORD)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_BowgunSpec_ReloadType()					
+					elseif EquipmentBowgunSpecReloadTypeMenu  == 6 then
+						Equipment_BowgunSpec()
+					end	
+				end
+			end	
+--	メインメニュー/	装備/	ボウガン性能/	残弾数	--
+			function Equipment_BowgunSpec_capacity()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local capacityValues = {"5", "50"}
+				EquipmentBowgunSpeccapacityMenu = gg.choice({
+				"[1]    " .. capacityValues[1],
+				"[2]    " .. capacityValues[2],
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/ボウガン性能/残弾数")
+				if EquipmentBowgunSpeccapacityMenu == nil then
+					temporarilyhide()	
+					Equipment_BowgunSpec_capacity()
+				else	
+					if EquipmentBowgunSpeccapacityMenu >= 1 and EquipmentBowgunSpeccapacityMenu <= 2 then
+						local chosenValue = capacityValues[EquipmentBowgunSpeccapacityMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_BowgunSpec_capacity()
+					elseif EquipmentBowgunSpeccapacityMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガン残弾数を入力\n(Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Equipment_BowgunSpec_capacity()
+					elseif EquipmentBowgunSpeccapacityMenu == 4 then
+						Equipment_BowgunSpec()
+					end	
+				end
+			end
+--	メインメニュー/	装備/	ボウガン弾薬種類	--
+		function Equipment_BowgunAmmo()
+			gg.clearResults()
+			local offsets = {0x4, 0x8, 0xC}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end		
+			gg.setVisible(false)	
+			EquipmentBowgunAmmoMenu = gg.choice({
+			"[1]    弾薬種",
+			"[2]    属性",
+			"[3]    レベル",		
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/ボウガン弾薬種類")
+			if EquipmentBowgunAmmoMenu == nil then
+				temporarilyhide()	
+				Equipment_BowgunAmmo()
+			else
+				if EquipmentBowgunAmmoMenu == 1 then
+					applyOffset(offsets[1])
+					Equipment_BowgunAmmo_Type()
+				elseif EquipmentBowgunAmmoMenu == 2 then	
+					applyOffset(offsets[2])
+					Equipment_BowgunAmmo_ElementType()
+				elseif EquipmentBowgunAmmoMenu == 3 then
+					applyOffset(offsets[3])
+					Equipment_BowgunAmmo_Level()
+				elseif EquipmentBowgunAmmoMenu == 4 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	ボウガン弾薬種類/	種類	--		
+			function Equipment_BowgunAmmo_Type()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local AmmoType = {
+				"[1]    通常弾",
+				"[2]    貫通弾",
+				"[3]    散弾",
+				"[4]    徹甲榴弾",
+				"[5]    炸裂弾",		
+				"[6]    任意の値",		
+				"[←]    もどる"
+				}
+				EquipmentBowgunAmmoTypeMenu = gg.choice(AmmoType, nil,"メインメニュー/装備/ボウガン弾薬種類/種類")
+				if EquipmentBowgunAmmoTypeMenu == nil then
+					temporarilyhide()	
+					Equipment_BowgunAmmo_Type()
+				else				
+					if EquipmentBowgunAmmoTypeMenu >= 1 and EquipmentBowgunAmmoTypeMenu <= 5 then
+						local chosenValue = tostring(EquipmentBowgunAmmoTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_BowgunAmmo_Type()
+					elseif EquipmentBowgunAmmoTypeMenu == 6 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの弾薬種類を入力\n(範囲:1~5,1:通常弾,2:貫通弾,3:散弾,4:徹甲榴弾,5:炸裂弾,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end		
+						Equipment_BowgunAmmo_Type()
+					elseif EquipmentBowgunAmmoTypeMenu == 7 then
+						Equipment_BowgunAmmo()
+					end
+				end	
+			end
+--	メインメニュー/	装備/	ボウガン弾薬種類/	属性	--		
+			function Equipment_BowgunAmmo_ElementType()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				AmmoElementType = {
+				"[1]    なし",
+				"[2]    火",
+				"[3]    水",
+				"[4]    雷",
+				"[5]    氷",
+				"[6]    龍",
+				"[7]    毒",
+				"[8]    麻痺",
+				"[9]    睡眠",
+				"[10]    爆破",	
+				"[11]    任意の値",	
+				"[←]    もどる"
+				}
+				EquipmentBowgunAmmoElementTypeMenu = gg.choice(AmmoElementType, nil,"メインメニュー/装備/ボウガン弾薬種類/属性\n*7以上は機能しない")
+				if EquipmentBowgunAmmoElementTypeMenu == nil then
+					temporarilyhide()	
+					Equipment_BowgunAmmo_ElementType()
+				else
+					if EquipmentBowgunAmmoElementTypeMenu >= 1 and EquipmentBowgunAmmoElementTypeMenu <= 10 then
+						local chosenValue = tostring(EquipmentBowgunAmmoElementTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_BowgunAmmo_ElementType()
+					elseif EquipmentBowgunAmmoElementTypeMenu == 11 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガンの弾薬属性種類を入力\n(範囲:1~10,1:なし,2:火,3:水,4雷,5:氷,6:龍,7:毒,8:麻痺,9:睡眠,10:爆破,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Equipment_BowgunAmmo_ElementType()
+					elseif EquipmentBowgunAmmoElementTypeMenu == 12 then
+						Equipment_BowgunAmmo()
+					end
+				end	
+			end
+--	メインメニュー/	装備/	ボウガン弾薬種類/	レベル	--	
+			function Equipment_BowgunAmmo_Level()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local BowgunAmmoLevel = {"1"}	
+				EquipmentBowgunAmmoLevelMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    任意",		
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/ボウガン弾薬種類/レベル\n*2以上は機能しない")
+				if EquipmentBowgunAmmoLevelMenu == nil then
+					temporarilyhide()	
+					Equipment_BowgunAmmo_Level()
+				else
+					if EquipmentBowgunAmmoLevelMenu == 1 then
+						local chosenValue = BowgunAmmoLevel[EquipmentBowgunAmmoLevelMenu]
+						gg.editAll(chosenValue,gg.TYPE_DWORD)
+						Equipment_BowgunAmmo_Level()
+					elseif EquipmentBowgunAmmoLevelMenu == 2 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ボウガン弾薬種のレベルを入力\n(デフォ:1,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Equipment_BowgunAmmo_Level()
+					elseif EquipmentBowgunAmmoLevelMenu == 3 then
+						Equipment_BowgunAmmo()
+					end
+				end
+			end			
+--	メインメニュー/	装備/	弓矢種類	--				
+		function Equipment_BowArrow()	
+			gg.clearResults()
+			local offsets = {0x4, 0x8}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end		
+			gg.setVisible(false)	
+			EquipmentBowArrowMenu = gg.choice({
+			"[1]    矢種",
+			"[2]    レベル",		
+			"[←]    もどる"
+			}, nil,"メインメニュー/装備/弓矢種類")
+			if EquipmentBowArrowMenu == nil then
+				temporarilyhide()	
+				Equipment_BowArrow()
+			else
+				if EquipmentBowArrowMenu == 1 then
+					applyOffset(offsets[1])
+					Equipment_BowArrow_Type()
+				elseif EquipmentBowArrowMenu == 2 then	
+					applyOffset(offsets[2])
+					Equipment_BowArrow_Level()
+				elseif EquipmentBowArrowMenu == 3 then
+					Equipment()
+				end
+			end
+		end	
+--	メインメニュー/	装備/	弓矢種類/	矢種	--		
+			function Equipment_BowArrow_Type()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local BowArrowType = {
+				"[1]    連射",
+				"[2]    拡散",
+				"[3]    貫通",	
+				"[4]    任意の値",	
+				"[←]    もどる"
+				}
+				EquipmentBowArrowTypeMenu = gg.choice(BowArrowType, nil,"メインメニュー/装備/弓矢種類/矢種\n*装備切り替え後適用")
+				if EquipmentBowArrowTypeMenu == nil then
+					temporarilyhide()	
+					Equipment_BowArrow_Type()
+				else				
+					if EquipmentBowArrowTypeMenu >= 1 and EquipmentBowArrowTypeMenu <= 3 then
+						local chosenValue = tostring(EquipmentBowArrowTypeMenu)
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Equipment_BowArrow_Type()
+					elseif EquipmentBowArrowTypeMenu == 4 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "弓の矢種類を入力\n(範囲:1~3,1:連射,2:拡散,3:貫通,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end							
+						Equipment_BowArrow_Type()
+					elseif EquipmentBowArrowTypeMenu == 5 then
+						Equipment_BowArrow()
+					end
+				end	
+			end
+--	メインメニュー/	装備/	弓矢種類/	レベル	--	
+			function Equipment_BowArrow_Level()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local BowgArrowLevel = {"1"}	
+				EquipmentBowArrowLevelMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    任意",		
+				"[←]    もどる"
+				}, nil,"メインメニュー/装備/弓矢種類/レベル\n")
+				if EquipmentBowArrowLevelMenu == nil then
+					temporarilyhide()	
+					Equipment_BowArrow_Level()
+				else
+					if EquipmentBowArrowLevelMenu == 1 then
+						local chosenValue = BowgArrowLevel[EquipmentBowArrowLevelMenu]
+						gg.editAll(chosenValue,gg.TYPE_DWORD)
+						Equipment_BowArrow_Level()
+					elseif EquipmentBowArrowLevelMenu == 2 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "弓矢種のレベルを入力\n(*2以上は機能しない?,デフォ:1,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Equipment_BowArrow_Level()
+					elseif EquipmentBowArrowLevelMenu == 3 then
+						Equipment_BowArrow()
+					end
+				end
+			end				
+--	メインメニュー/	ハンター	--
+	function Hunter()
+		gg.clearList()
+		gg.clearResults()		
+		gg.setVisible(false)	
+		HunterMenu = gg.choice({
+		"[1]    動作速度",
+		"[2]    体力",
+		"[3]    ダメージ",
+		"[4]    反応×",		
+		"[5]    耐性",
+		"[6]    戦闘時",
+		"[7]    回避",
+		"[←]    もどる"
+		}, nil,"メインメニュー/ハンター")
+		if HunterMenu == nil then
+			temporarilyhide()	
+			Hunter()
+		else
+			if HunterMenu == 1 then
+				gg.setVisible(false)
+				valueFromClass("MotionController", "0x28", false, false, gg.TYPE_FLOAT)
+				gg.getResults(9999)		
+				gg.refineNumber("0~", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local choice = gg.alert("メインメニュー/ハンター/動作速度\n全ての設定を行った後に実行して下さい。\n\n*以下の操作が必要\n[STEP1] モンスター動作速度の設定\n[STEP2] 戦闘画面への出入り", "[←]    もどる")
+				if choice == 1 then
+					Hunter()
+				end
+				while true do
+					gg.setVisible(false)
+					local MonsterSpeedValues = {"1.0001","0","5"}	
+					MonsterMotionSpeedMenuHunter = gg.choice({
+					"[1]    デフォルト",
+					"[2]    凍結",
+					"[3]    5倍"
+					},nil,"メインメニュー/ハンター/動作速度\n\n-->>[STEP1] モンスター,オトモ動作速度の設定")        				
+					if MonsterMotionSpeedMenuHunter == nil then
+					else
+						if MonsterMotionSpeedMenuHunter >= 1 and MonsterMotionSpeedMenuHunter <= 3 then
+							local chosenValue = MonsterSpeedValues[MonsterMotionSpeedMenuHunter]
+							gg.editAll(chosenValue, gg.TYPE_FLOAT)
+							break
+						end
+					end
+				end
+				gg.alert("メインメニュー/ハンター/動作速度\n\n-->>[STEP2] 戦闘画面への出入り","")
+				while true do
+					temporarilyhide()
+					gg.setVisible(false)
+					local choice = gg.alert("戦闘画面への出入りを済ませましたか？","はい")
+					if choice == 1 then
+						break
+					end
+				end
+				gg.refineNumber("0.5~~1", gg.TYPE_FLOAT, false, gg.SIGN_NOT_EQUAL, 0, -1, 0)				
+				Hunter_MotionSpeed()
+			elseif HunterMenu == 2 then	
+				gg.setVisible(false)
+				valueFromClass("FieldHunterHealthService", "0x18", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)
+				Hunter_Health()
+			elseif HunterMenu == 3 then				
+				Hunter_Damage()
+			elseif HunterMenu == 4 then	
+				gg.setVisible(false)
+				valueFromClass("BattleAttackParam", "0x14", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)	
+				Hunter_Action()				
+			elseif HunterMenu == 5 then	
+				Hunter_Resistance()
+			elseif HunterMenu == 6 then
+				gg.setVisible(false)
+				valueFromClass("BattleConfig", "0x88", false, false, gg.TYPE_FLOAT)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)		
+				Hunter_InBattle()
+			elseif HunterMenu == 7 then
+				Hunter_Dodge()
+			elseif HunterMenu == 8 then
+				mainMenu()
+			end
+		end
+	end	
+--	メインメニュー/	ハンター/	動作速度	--		
+		function Hunter_MotionSpeed()
+			local results = gg.getResults(9999)
+			local HunterSpeedValues = {"1", "5", "50"}
+			gg.setVisible(false)
+			local options = {
+				"[1]    デフォルト",
+				"[2]    5倍",
+				"[3]    50倍",
+				"[4]    任意の値",
+				"[←]    もどる"
+			}
+			HunterMotionSpeedMenu = gg.choice(options, nil, "メインメニュー/ハンター/動作速度")
+			if HunterMotionSpeedMenu == nil then
+				temporarilyhide()
+				Hunter_MotionSpeed()
+			else
+				if HunterMotionSpeedMenu >= 1 and HunterMotionSpeedMenu <= 3 then
+					for _, result in ipairs(results) do
+						gg.addListItems({
+							{
+								address = result.address,
+								flags = gg.TYPE_FLOAT,
+								value = HunterSpeedValues[HunterMotionSpeedMenu],
+								freeze = true
+							}
+						})
+					end
+					Hunter_MotionSpeed()
+				elseif HunterMotionSpeedMenu == 4 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "ハンター動作速度を入力\n(倍率,デフォ:1,Float)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							for _, result in ipairs(results) do
+								gg.addListItems({
+									{
+										address = result.address,
+										flags = gg.TYPE_FLOAT,
+										value = tonumber(val[1]),
+										freeze = true
+									}
+								})
+							end
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					Hunter_MotionSpeed()
+				elseif HunterMotionSpeedMenu == 5 then
+					Hunter()
+				end
+			end
+		end
+--	メインメニュー/	ハンター/	体力	--
+		function Hunter_Health()
+			gg.clearResults()
+			gg.setVisible(false)
+			HunterHealthMenu = gg.choice({
+				"[1]    最大値",
+				"[2]    回復速度",
+				"[←]    もどる"
+			}, nil, "メインメニュー/ハンター/体力")
+			if HunterHealthMenu == nil then
+				temporarilyhide()
+				Hunter_Health()
+			else
+				local resultList = gg.getListItems()
+				local modifiedResults = {}
+				local offset = (HunterHealthMenu == 2) and 0x8 or 0x0
+				for _, result in ipairs(resultList) do
+					local flags = (HunterHealthMenu == 2) and gg.TYPE_DOUBLE or result.flags
+					local modifiedAddress = result.address + offset
+					table.insert(modifiedResults, { address = modifiedAddress, value = result.value, flags = flags })
+				end
+				gg.loadResults(modifiedResults)
+				if HunterHealthMenu == 1 then
+					Hunter_Health_MaximumValue()
+				elseif HunterHealthMenu == 2 then
+					Hunter_Health_RecoverySpeed()
+				elseif HunterHealthMenu == 3 then
+					Hunter()
+				end
+			end
+		end
+--	メインメニュー/	ハンター/	体力/	最大値	--		
+			function Hunter_Health_MaximumValue()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local HealthMaximumValue = {"150", "1,500,000"}
+					HunterHealthMaximumValueMenu = gg.choice({
+					"[1]    " .. HealthMaximumValue[1],
+					"[2]    " .. HealthMaximumValue[2],
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/体力/最大値")
+					if HunterHealthMaximumValueMenu == nil then
+						temporarilyhide()	
+						Hunter_Health_MaximumValue()
+					else	
+						if HunterHealthMaximumValueMenu >= 1 and HunterHealthMaximumValueMenu <= 2 then
+							local chosenValue = HealthMaximumValue[HunterHealthMaximumValueMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Health_MaximumValue()
+						elseif HunterHealthMaximumValueMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター体力最大値を入力\n(Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Hunter_Health_MaximumValue()
+						elseif HunterHealthMaximumValueMenu == 4 then
+							Hunter_Health()
+						end	
+					end
+				end			
+--	メインメニュー/	ハンター/	体力/	回復速度	--	
+			function Hunter_Health_RecoverySpeed()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local HealthRecoverySpeed = {"0.00002777778", "10,000,000"}
+					HunterHealthMaximumValueMenu = gg.choice({
+					"[1]    デフォルト",
+					"[2]    即時全回復",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/体力/回復速度")
+					if HunterHealthMaximumValueMenu == nil then
+						temporarilyhide()	
+						Hunter_Health_RecoverySpeed()
+					else	
+					if HunterHealthMaximumValueMenu >= 1 and HunterHealthMaximumValueMenu <= 3 then
+						local chosenValue = HealthRecoverySpeed[HunterHealthMaximumValueMenu]
+						gg.editAll(chosenValue, gg.TYPE_DOUBLE)
+							Hunter_Health_RecoverySpeed()
+						elseif HunterHealthMaximumValueMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター体力回復速度を入力\n(1ミリ秒[ms]あたりの回復割合[%],\nデフォ:0.00002777778,Double)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DOUBLE)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Hunter_Health_RecoverySpeed()
+						elseif HunterHealthMaximumValueMenu == 4 then
+							Hunter_Health()
+						end	
+					end
+				end			
+--	メインメニュー/	ハンター/	ダメージ	--
+		function Hunter_Damage()
+			gg.clearList()
+			gg.clearResults()
+			gg.setVisible(false)
+			HunterDamageMenu = gg.choice({		
+				"[1]    物理",
+				"[2]    属性",
+				"[3]    会心",
+				"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/ダメージ")
+			if HunterDamageMenu == nil then
+				temporarilyhide()	
+				Hunter_Damage()
+			else	
+				if HunterDamageMenu == 1 then
+					gg.setVisible(false)			
+					valueFromClass("PhysicalDamageData", "0x10", false, false, gg.TYPE_DWORD)
+					local results = gg.getResults(9999)
+					gg.addListItems(results)				
+					Hunter_Damage_Physical()
+				elseif HunterDamageMenu == 2 then
+					gg.setVisible(false)			
+					valueFromClass("ElementalDamageData", "0x10", false, false, gg.TYPE_DWORD)
+					local results = gg.getResults(9999)
+					gg.addListItems(results)				
+					Hunter_Damage_Element()
+				elseif HunterDamageMenu == 3 then
+					gg.setVisible(false)			
+					valueFromClass("DamageCalculationInfo", "0x10", false, false, gg.TYPE_DWORD)
+					local results = gg.getResults(9999)
+					gg.addListItems(results)
+					Hunter_Damage_Critical()
+				elseif HunterDamageMenu == 4 then
+					Hunter()
+				end	
+			end
+		end		
+--	メインメニュー/	ハンター/	ダメージ/	物理	--
+			function Hunter_Damage_Physical()
+				gg.clearResults()
+				local offsets = {0x0, 0x4, 0x8, 0xC}
+				local resultList = gg.getListItems()
+				local modifiedResults = {}
+				local function applyOffset(offset)
+					for _, result in ipairs(resultList) do
+						table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+					end
+					gg.loadResults(modifiedResults)
+				end
+				gg.setVisible(false)
+				HunterDamagePhysicalMenu = gg.choice({
+				"[1]    斬撃",
+				"[2]    打撃",
+				"[3]    射撃",
+				"[4]    射撃 (2023冬)",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/ダメージ/物理")	
+				if HunterDamagePhysicalMenu == nil then
+					temporarilyhide()	
+					Hunter_Damage_Physical()
+				else
+					if HunterDamagePhysicalMenu == 1 then
+						applyOffset(offsets[1])				
+						Hunter_Damage_Physical_Cut()
+					elseif HunterDamagePhysicalMenu == 2 then
+						applyOffset(offsets[2])
+						Hunter_Damage_Physical_Blust()
+					elseif HunterDamagePhysicalMenu == 3 then 
+						applyOffset(offsets[3])
+						Hunter_Damage_Physical_Ammo()
+					elseif HunterDamagePhysicalMenu == 4 then
+						applyOffset(offsets[4])
+						Hunter_Damage_Physical_Ammo2023Winter()
+					elseif HunterDamagePhysicalMenu == 5 then
+						Hunter_Damage()
+					end
+				end
+			end
+--	メインメニュー/	ハンター/	ダメージ/	物理/	斬撃	--
+				function Hunter_Damage_Physical_Cut()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamagePhysicalCut = {"150", "1,500,000"}
+					HunterDamagePhysicalCutMenu = gg.choice({
+					"[1]    ほぼデフォルト",					
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる" 
+					}, nil,"メインメニュー/ハンター/ダメージ/物理/斬撃")	
+					if HunterDamagePhysicalCutMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Physical_Cut()
+					else
+						if HunterDamagePhysicalCutMenu >= 1 and HunterDamagePhysicalCutMenu <= 2 then
+							local chosenValue = DamagePhysicalCut[HunterDamagePhysicalCutMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Physical_Cut()
+						elseif HunterDamagePhysicalCutMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター物理斬撃ダメージを入力\n(割合[%],ほぼデフォルト:150,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Physical_Cut()
+						elseif HunterDamagePhysicalCutMenu == 4 then
+							Hunter_Damage_Physical()
+						end
+					end
+				end
+--	メインメニュー/	ハンター/	ダメージ/	物理/	打撃	--	
+				function Hunter_Damage_Physical_Blust()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamagePhysicalBlust = {"150", "1,500,000"}
+					HunterDamagePhysicalBlustMenu = gg.choice({
+					"[1]    ほぼデフォルト",
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/物理/打撃")		
+					if HunterDamagePhysicalBlustMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Physical_Blust()
+					else
+						if HunterDamagePhysicalBlustMenu >= 1 and HunterDamagePhysicalBlustMenu <= 2 then
+							local chosenValue = DamagePhysicalBlust[HunterDamagePhysicalBlustMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Physical_Blust()
+						elseif HunterDamagePhysicalBlustMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター物理打撃ダメージを入力\n(割合[%],ほぼデフォルト:150,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Physical_Blust()
+						elseif HunterDamagePhysicalBlustMenu == 4 then
+							Hunter_Damage_Physical()
+						end
+					end
+				end		
+--	メインメニュー/	ハンター/	ダメージ/	物理/	射撃	--	
+				function Hunter_Damage_Physical_Ammo()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamagePhysicalAmmo = {"150", "1,500,000"}
+					HunterDamagePhysicalAmmoMenu = gg.choice({
+					"[1]    ほぼデフォルト",					
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/物理/射撃")	
+					if HunterDamagePhysicalAmmoMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Physical_Ammo()
+					else
+						if HunterDamagePhysicalAmmoMenu >= 1 and HunterDamagePhysicalAmmoMenu <= 2 then
+							local chosenValue = DamagePhysicalAmmo[HunterDamagePhysicalAmmoMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Physical_Ammo()
+						elseif HunterDamagePhysicalAmmoMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター物理射撃ダメージを入力\n(割合[%],ほぼデフォルト:150,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Physical_Ammo()
+						elseif HunterDamagePhysicalAmmoMenu == 4 then
+							Hunter_Damage_Physical()
+						end
+					end
+				end			
+--	メインメニュー/	ハンター/	ダメージ/	物理/	射撃 (2023冬)	--	
+				function Hunter_Damage_Physical_Ammo2023Winter()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamagePhysicalAmmo2023Winter = {"150", "1,500,000"}
+					HunterDamagePhysicalAmmo2023Winter = gg.choice({
+					"[1]    ほぼデフォルト",					
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/物理/射撃 (2023冬)")
+					if HunterDamagePhysicalAmmo2023Winter == nil then
+						temporarilyhide()
+						Hunter_Damage_Physical_Ammo2023Winter()
+					else
+						if HunterDamagePhysicalAmmo2023Winter >= 1 and HunterDamagePhysicalAmmo2023Winter <= 2 then
+							local chosenValue = DamagePhysicalAmmo2023Winter[HunterDamagePhysicalAmmo2023Winter]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Physical_Ammo2023Winter()
+						elseif HunterDamagePhysicalAmmo2023Winter == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター物理射撃(2023冬)ダメージを入力\n(割合[%],ほぼデフォルト:150,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Physical_Ammo2023Winter()
+						elseif HunterDamagePhysicalAmmo2023Winter == 4 then
+							Hunter_Damage_Physical()
+						end
+					end
+				end		
+--	メインメニュー/	ハンター/	ダメージ/	属性	--
+			function Hunter_Damage_Element()
+				gg.clearResults()
+				local offsets = {0x0,0x4, 0x8, 0xC, 0x10}
+				local resultList = gg.getListItems()
+				local modifiedResults = {}
+				local function applyOffset(offset)
+					for _, result in ipairs(resultList) do
+						table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+					end
+					gg.loadResults(modifiedResults)
+				end
+				gg.setVisible(false)
+				HunterDamageElementMenu = gg.choice({
+				"[1]    火",
+				"[2]    水",
+				"[3]    雷",
+				"[4]    氷",
+				"[5]    龍",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/ダメージ/属性")		
+				if HunterDamageElementMenu == nil then
+					temporarilyhide()	
+					Hunter_Damage_Physical()
+				else
+					if HunterDamageElementMenu == 1 then
+						applyOffset(offsets[1])	
+						Hunter_Damage_Element_Fire()
+					elseif HunterDamageElementMenu == 2 then
+						applyOffset(offsets[2])	
+						Hunter_Damage_Element_Water()
+					elseif HunterDamageElementMenu == 3 then
+						applyOffset(offsets[3])	
+						Hunter_Damage_Element_Thunder()
+					elseif HunterDamageElementMenu == 4 then
+						applyOffset(offsets[4])	
+						Hunter_Damage_Element_Ice()
+					elseif HunterDamageElementMenu == 5 then
+						applyOffset(offsets[5])	
+						Hunter_Damage_Element_Dragon()						
+					elseif HunterDamageElementMenu == 6 then
+						Hunter_Damage()
+					end
+				end
+			end	
+--	メインメニュー/	ハンター/	ダメージ/	属性/	火	--
+				function Hunter_Damage_Element_Fire()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageElementFire = {"100", "1,000,000"}
+					HunterDamageElementFireMenu = gg.choice({
+					"[1]    ほぼデフォルト",					
+					"[2]    1,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/属性/火")
+					if HunterDamageElementFireMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Element_Fire()
+					else
+						if HunterDamageElementFireMenu >= 1 and HunterDamageElementFireMenu <= 2 then
+							local chosenValue = DamageElementFire[HunterDamageElementFireMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Element_Fire()
+						elseif HunterDamageElementFireMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター火属性ダメージを入力\n(割合[%],ほぼデフォルト:100,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Element_Fire()
+						elseif HunterDamageElementFireMenu == 4 then
+							Hunter_Damage_Element()
+						end
+					end
+				end		
+--	メインメニュー/	ハンター/	ダメージ/	属性/	水	--
+				function Hunter_Damage_Element_Water()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageElementWater = {"100", "1,000,000"}
+					HunterDamageElementWaterMenu = gg.choice({
+					"[1]    ほぼデフォルト",	
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/属性/水")
+					if HunterDamageElementWaterMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Element_Water()
+					else
+						if HunterDamageElementWaterMenu >= 1 and HunterDamageElementWaterMenu <= 2 then
+							local chosenValue = DamageElementWater[HunterDamageElementWaterMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Element_Water()
+						elseif HunterDamageElementWaterMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター水属性ダメージを入力\n(割合[%],ほぼデフォルト:100,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Element_Water()
+						elseif HunterDamageElementWaterMenu == 4 then
+							Hunter_Damage_Element()
+						end
+					end
+				end			
+--	メインメニュー/	ハンター/	ダメージ/	属性/	雷	--
+				function Hunter_Damage_Element_Thunder()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageElementThunder = {"100", "1,000,000"}
+					HunterDamageElementThunderMenu = gg.choice({
+					"[1]    ほぼデフォルト",	
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/属性/雷")
+					if HunterDamageElementThunderMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Element_Thunder()
+					else
+						if HunterDamageElementThunderMenu >= 1 and HunterDamageElementThunderMenu <= 2 then
+							local chosenValue = DamageElementThunder[HunterDamageElementThunderMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Element_Thunder()
+						elseif HunterDamageElementThunderMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター雷属性ダメージを入力\n(割合[%],ほぼデフォルト:100,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Element_Thunder()
+						elseif HunterDamageElementThunderMenu == 4 then
+							Hunter_Damage_Element()
+						end
+					end
+				end		
+--	メインメニュー/	ハンター/	ダメージ/	属性/	氷	--
+				function Hunter_Damage_Element_Ice()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageElementIce = {"100", "1,000,000"}
+					HunterDamageElementIceMenu = gg.choice({
+					"[1]    ほぼデフォルト",	
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/属性/氷")
+					if HunterDamageElementIceMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Element_Ice()
+					else
+						if HunterDamageElementIceMenu >= 1 and HunterDamageElementIceMenu <= 2 then
+							local chosenValue = DamageElementIce[HunterDamageElementIceMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Element_Ice()
+						elseif HunterDamageElementIceMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター氷属性ダメージを入力\n(割合[%],ほぼデフォルト:100,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Element_Ice()
+						elseif HunterDamageElementIceMenu == 4 then
+							Hunter_Damage_Element()
+						end
+					end
+				end		
+--	メインメニュー/	ハンター/	ダメージ/	属性/	龍	--
+				function Hunter_Damage_Element_Dragon()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageElementDragon = {"100", "1,000,000"}
+					HunterDamageElementDragonMenu = gg.choice({
+					"[1]    ほぼデフォルト",	
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/属性/龍")
+					if HunterDamageElementDragonMenu == nil then
+						temporarilyhide()
+						Hunter_Damage_Element_Dragon()
+					else
+						if HunterDamageElementDragonMenu >= 1 and HunterDamageElementDragonMenu <= 2 then
+							local chosenValue = DamageElementDragon[HunterDamageElementDragonMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Element_Dragon()
+						elseif HunterDamageElementDragonMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンター龍属性ダメージを入力\n(割合[%],ほぼデフォルト:100,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)									
+									break
+								else
+									temporarilyhide()
+								end
+							end	
+							Hunter_Damage_Element_Dragon()
+						elseif HunterDamageElementDragonMenu == 4 then
+							Hunter_Damage_Element()
+						end
+					end
+				end					
+--	メインメニュー/	ハンター/	ダメージ/	会心	--
+			function Hunter_Damage_Critical()
+				gg.clearResults()
+				local offsets = {0x0,0x4}
+				local resultList = gg.getListItems()
+				local modifiedResults = {}
+				local function applyOffset(offset)
+					for _, result in ipairs(resultList) do
+						table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+					end
+					gg.loadResults(modifiedResults)
+				end
+				gg.setVisible(false)
+				HunterDamageCriticalMenu = gg.choice({
+				"[1]    プラス会心",
+				"[2]    マイナス会心",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/ダメージ/会心")
+				if HunterDamageCriticalMenu == nil then
+					temporarilyhide()
+					Hunter_Damage_Critical()
+					else
+					if HunterDamageCriticalMenu == 1 then
+						applyOffset(offsets[1])
+						Hunter_Damage_Critical_Plus()
+					elseif HunterDamageCriticalMenu == 2 then
+						applyOffset(offsets[2])
+						Hunter_Damage_Critical_Minus()
+					elseif
+						HunterDamageCriticalMenu == 3 then
+						Hunter_Damage()
+					end
+				end
+			end	
+--	メインメニュー/	ハンター/	ダメージ/	会心	/プラス会心	--
+				function Hunter_Damage_Critical_Plus()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageCriticalPlus = {"125", "1,250,000"}
+					HunterDamageCriticalPlusMenu = gg.choice({
+					"[1]    デフォルト",
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/会心/プラス会心")
+					if HunterDamageCriticalPlusMenu == nil then
+						temporarilyhide()	
+						Hunter_Damage_Critical_Plus()
+					else	
+						if HunterDamageCriticalPlusMenu >= 1 and HunterDamageCriticalPlusMenu <= 2 then
+							local chosenValue = DamageCriticalPlus[HunterDamageCriticalPlusMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Critical_Plus()
+						elseif HunterDamageCriticalPlusMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンタープラス会心ダメージを入力\n(割合[%],デフォ:125,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Hunter_Damage_Critical_Plus()
+						elseif HunterDamageCriticalPlusMenu == 4 then
+							Hunter_Damage_Critical()
+						end	
+					end
+				end		
+--	メインメニュー/	ハンター/	ダメージ/	会心	/マイナス会心	--
+				function Hunter_Damage_Critical_Minus()
+					gg.getResults(9999)
+					gg.setVisible(false)
+					local DamageCriticalMinus = {"75", "75,000"}
+					HunterDamageCriticalMinusMenu = gg.choice({
+					"[1]    デフォルト",
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+					}, nil,"メインメニュー/ハンター/ダメージ/会心/マイナス会心")
+					if HunterDamageCriticalMinusMenu == nil then
+						temporarilyhide()	
+						Hunter_Damage_Critical_Minus()
+					else	
+						if HunterDamageCriticalMinusMenu >= 1 and HunterDamageCriticalMinusMenu <= 2 then
+							local chosenValue = DamageCriticalMinus[HunterDamageCriticalMinusMenu]
+							gg.editAll(chosenValue, gg.TYPE_DWORD)
+							Hunter_Damage_Critical_Minus()
+						elseif HunterDamageCriticalMinusMenu == 3 then
+							while true do
+								gg.setVisible(false)
+								val = gg.prompt({[1] = "ハンターマイナス会心ダメージを入力\n(割合[%],デフォ:75,Dword)"}, {[1] = ""})
+								if val and val[1] ~= nil then
+									gg.editAll(val[1], gg.TYPE_DWORD)
+									break
+								else
+									temporarilyhide()
+								end
+							end
+							Hunter_Damage_Critical_Minus()
+						elseif HunterDamageCriticalMinusMenu == 4 then
+							Hunter_Damage_Critical()
+						end	
+					end
+				end
+--	メインメニュー/	ハンター/	反応	--	
+		function Hunter_Action()
+			gg.clearResults()
+			local offsets = {0x0,0x4}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end
+			gg.setVisible(false)	
+			HunterActionMenu = gg.choice({
+			"[1]    モーション値",
+			"[2]    気絶値",		
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/反応")		
+			if HunterActionMenu == nil then
+				temporarilyhide()	
+				Hunter_Action()
+			else
+				if HunterActionMenu == 1 then
+					applyOffset(offsets[1])		
+					gg.getResults(9999)	
+					gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)							
+					Hunter_Action_MotionValue()	
+				elseif HunterActionMenu == 2 then
+					applyOffset(offsets[2])
+					gg.getResults(9999)	
+					gg.refineNumber("0~5,000", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)							
+					Hunter_Action_StunValue()	
+				elseif HunterActionMenu == 4 then
+					Hunter()
+				end	
+			end
+		end
+--	メインメニュー/	ハンター/	反応/	モーション値	--
+			function Hunter_Action_MotionValue()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local MotionValue = {"80", "800,000"}
+				HunterActionMotionValueMenu = gg.choice({
+					"[1]    ほぼデフォルト",
+					"[2]    10,000倍",
+					"[3]    任意の値",
+					"[←]    もどる"
+				}, nil, "メインメニュー/ハンター/反応/モーション値")
+				if HunterActionMotionValueMenu == nil then
+					temporarilyhide()
+					Hunter_Action_MotionValue()
+				else
+					if HunterActionMotionValueMenu >= 1 and HunterActionMotionValueMenu <= 2 then
+						local chosenValue = MotionValue[HunterActionMotionValueMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Hunter_Action_MotionValue()
+					elseif HunterActionMotionValueMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンターのモーション値を入力\n(デフォルト:80,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Hunter_Action_MotionValue()
+					elseif HunterActionMotionValueMenu == 4 then
+						Hunter_Action()
+					end
+				end
+			end			
+--	メインメニュー/	ハンター/	反応/	気絶値	--	
+		function Hunter_Action_StunValue()
+			gg.getResults(9999)		
+			gg.setVisible(false)	
+			local StunValue = {"5000"}	
+			HunterActionStunValueMenu = gg.choice({
+			"[1]    なし",
+			"[2]    即気絶",					
+			"[3]    任意の値",	
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/反応/気絶値")
+			if HunterActionStunValueMenu == nil then
+				temporarilyhide()	
+				Hunter_Action_StunValue()
+			else
+				if HunterActionStunValueMenu == 1 then	
+					local chosenValue = StunValue[HunterActionStunValueMenu]	
+					gg.editAll(chosenValue,gg.TYPE_DWORD)
+					Hunter_Action_StunValue()
+				elseif HunterActionStunValueMenu == 2 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "攻撃気絶値を入力\n()"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_DWORD)
+							break
+						else
+							temporarilyhide()
+						end
+					end					
+					Hunter_Action_StunValue()		
+				elseif HunterActionStunValueMenu == 3 then			
+					Hunter_Action()
+				end
+			end
+		end			
+--	メインメニュー/	ハンター/	耐性	--
+		function Hunter_Resistance()
+			gg.clearList()
+			gg.clearResults()		
+			gg.setVisible(false)	
+			HunterResistanceMenu = gg.choice({
+			"[1]    毒",
+			"[2]    麻痺",
+			"[3]    裂傷",	
+			"[4]    気絶",	
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/耐性")
+			if HunterResistanceMenu == nil then
+				temporarilyhide()	
+				Hunter_Resistance()
+			else
+				if HunterResistanceMenu == 1 then	
+					gg.setVisible(false)			
+					valueFromClass("HunterPoisonConfig", "0x10", false, false, gg.TYPE_FLOAT)			
+					local results = gg.getResults(9999)
+					gg.addListItems(results)
+					Hunter_Resistance_Poison()
+				elseif HunterResistanceMenu == 2 then
+					gg.setVisible(false)			
+					valueFromClass("HunterParalysisConfig", "0x18", false, false, gg.TYPE_FLOAT)			
+					local results = gg.getResults(9999)
+					gg.addListItems(results)				
+					Hunter_Resistance_Paralysis()
+				elseif HunterResistanceMenu == 3 then
+					gg.setVisible(false)			
+					valueFromClass("HunterParalysisConfig", "0x18", false, false, gg.TYPE_FLOAT)			
+					local results = gg.getResults(9999)
+					gg.addListItems(results)					
+					Hunter_Resistance_Bleeding()
+				elseif HunterResistanceMenu == 4 then
+					valueFromClass("AilmentsConfig", "0x30", false, false, gg.TYPE_FLOAT)					
+					Hunter_Resistance_Flash()
+				elseif HunterResistanceMenu == 5 then				
+					Hunter()
+				end
+			end
+		end		
+--	メインメニュー/	ハンター/	耐性/	毒	--
+		function Hunter_Resistance_Poison()
+			gg.clearResults()	
+			local offsets = {0x0, 0x4, 0x8}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end			
+			gg.setVisible(false)	
+			HunterResistancePoisonMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    無効",
+			"[3]    詳細設定",
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/耐性/毒")
+			if HunterResistancePoisonMenu == nil then
+				temporarilyhide()	
+				Hunter_Resistance_Poison()
+			else
+				if HunterResistancePoisonMenu == 1 then
+					applyOffset(offsets[1])
+					gg.editAll("1", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("0.5", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("1", gg.TYPE_FLOAT)					
+					Hunter_Resistance_Poison()
+				elseif HunterResistancePoisonMenu == 2 then	
+					applyOffset(offsets[1])
+					gg.editAll("0", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("0", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("0", gg.TYPE_FLOAT)	
+					Hunter_Resistance_Poison()
+				elseif HunterResistancePoisonMenu == 3 then
+					gg.setVisible(false)
+					local prompt = {"ハンター毒状態の持続時間\n(デフォ:1,Float)", "毒ダメージ\n(1秒[s]あたり,デフォ:0.5,Float)", "毒ダメージを受ける間隔\n(秒[s],デフォ:1,Float)"}
+					local userInput = gg.prompt(prompt, {[1] = "", [2] = "", [3] = ""}, {[1] = gg.TYPE_FLOAT, [2] = gg.TYPE_FLOAT, [3] = gg.TYPE_FLOAT})
+					if not userInput then
+						Hunter_Resistance_Poison()
+					end
+					local value1 = userInput[1]
+					local value2 = userInput[2]
+					local value3 = userInput[3]	
+					applyOffset(offsets[1])
+					gg.editAll(value1, gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll(value2, gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll(value3, gg.TYPE_FLOAT)			
+					Hunter_Resistance_Poison()
+				elseif HunterResistancePoisonMenu == 4 then
+					Hunter_Resistance()
+				end
+			end
+		end
+--	メインメニュー/	ハンター/	耐性/	麻痺	--
+		function Hunter_Resistance_Paralysis()
+			gg.clearResults()	
+			local offsets = {0x0, 0x4}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end						
+			gg.setVisible(false)	
+			HunterResistanceParalysisMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    即復帰",
+			"[3]    詳細設定",
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/耐性/麻痺")
+			if HunterResistanceParalysisMenu == nil then
+				temporarilyhide()	
+				Hunter_Resistance_Paralysis()
+			else
+				if HunterResistanceParalysisMenu == 1 then
+					applyOffset(offsets[1])
+					gg.editAll("5.19999980927", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("0.20000000298", gg.TYPE_FLOAT)				
+					Hunter_Resistance_Paralysis()
+				elseif HunterResistanceParalysisMenu == 2 then	
+					applyOffset(offsets[1])
+					gg.editAll("0", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("100", gg.TYPE_FLOAT)
+					Hunter_Resistance_Paralysis()
+				elseif HunterResistanceParalysisMenu == 3 then
+					gg.setVisible(false)
+					local prompt = {"ハンター麻痺状態の持続時間\n(デフォ:5.19999980927,Float)", "1タップによる麻痺時間の削減量\n(秒[s],デフォ:0.20000000298,Float)"}
+					local userInput = gg.prompt(prompt, {[1] = "", [2] = ""}, {[1] = gg.TYPE_FLOAT, [2] = gg.TYPE_FLOAT})
+					if not userInput then
+						Hunter_Resistance_Paralysis()
+					end
+					local value1 = userInput[1]
+					local value2 = userInput[2]
+					applyOffset(offsets[1])
+					gg.editAll(value1, gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll(value2, gg.TYPE_FLOAT)
+					Hunter_Resistance_Paralysis()
+				elseif HunterResistanceParalysisMenu == 4 then
+					Hunter_Resistance()
+				end
+			end
+		end
+--	メインメニュー/	ハンター/	耐性/	裂傷	--
+		function Hunter_Resistance_Bleeding()
+			gg.clearResults()		
+			local offsets = {0x0, 0x4,0x8}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end				
+			gg.setVisible(false)	
+			HunterResistanceBleedingMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    無効",
+			"[3]    詳細設定",
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/耐性/裂傷")
+			if HunterResistanceBleedingMenu == nil then
+				temporarilyhide()	
+				Hunter_Resistance_Bleeding()
+			else
+				if HunterResistanceBleedingMenu == 1 then
+					applyOffset(offsets[1])
+					gg.editAll("20", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("3", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("5", gg.TYPE_DWORD)					
+					Hunter_Resistance_Bleeding()
+				elseif HunterResistanceBleedingMenu == 2 then	
+					applyOffset(offsets[1])
+					gg.editAll("0", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("0", gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("0", gg.TYPE_DWORD)	
+					Hunter_Resistance_Bleeding()
+				elseif HunterResistanceBleedingMenu == 3 then
+					gg.setVisible(false)
+					local prompt = {"ハンター裂傷状態の復帰時間\n(秒[s],デフォ:20,Float)", "休息による裂傷状態の復帰時間\n(秒[s],デフォ:3,Float)", "裂傷ダメージ\n(デフォ:5,int)"}
+					local userInput = gg.prompt(prompt, {[1] = "", [2] = "", [3] = ""}, {[1] = gg.TYPE_FLOAT, [2] = gg.TYPE_FLOAT, [3] = gg.TYPE_DWORD})
+					if not userInput then
+						Hunter_Resistance_Bleeding()
+					end
+					local value1 = userInput[1]
+					local value2 = userInput[2]
+					local value3 = userInput[3]	
+					applyOffset(offsets[1])
+					gg.editAll(value1, gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll(value2, gg.TYPE_FLOAT)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll(value3, gg.TYPE_DWORD)			
+					Hunter_Resistance_Bleeding()
+				elseif HunterResistanceBleedingMenu == 4 then
+					Hunter_Resistance()
+				end
+			end
+		end
+--	メインメニュー/	ハンター/	耐性/	気絶	--
+			function Hunter_Resistance_Flash()
+				gg.getResults(9999)		
+				gg.setVisible(false)	
+				local ResistanceFlash = {"7", "0"}
+				HunterResistanceFlashMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    無効",
+				"[3]    詳細設定",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/耐性/気絶")
+				if HunterResistanceFlashMenu == nil then
+					temporarilyhide()	
+					Hunter_Resistance_Flash()
+				else
+					if HunterResistanceFlashMenu >= 1 and HunterResistanceFlashMenu <= 2 then
+						local chosenValue = ResistanceFlash[HunterResistanceFlashMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Hunter_Resistance_Flash()
+					elseif HunterResistanceFlashMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンター気絶時間を入力\n(秒[s],デフォ:7,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end		
+						Hunter_Resistance_Flash()
+					elseif HunterResistanceFlashMenu == 4 then
+						Hunter_Resistance()
+					end
+				end
+			end
+--	メインメニュー/	ハンター/	戦闘時	--			
+		function Hunter_InBattle()
+			gg.clearResults()
+			gg.setVisible(false)
+			local menus = {
+			"[1]    回復薬のクールタイム",
+			"[2]    復活時の無敵時間",
+			"[3]    SPゲージの最大容量",
+			"[4]    ダウン時のSPゲージ減少量",
+			"[←]    もどる"
+			}
+			local choice = gg.choice(menus, nil, "メインメニュー/ハンター/戦闘時")
+			if choice == nil then
+				temporarilyhide()
+				Hunter_InBattle()
+			else
+				local resultList = gg.getListItems()
+				local offsetMap = {0x0, 0x4, 0x3C, 0x40}
+				local flagMap = {nil, nil, gg.TYPE_DWORD, gg.TYPE_DWORD}
+				if choice >= 1 and choice <= 4 then
+					local offset = offsetMap[choice]
+					local flag = flagMap[choice]
+					local modifiedResults = {}
+					for _, result in ipairs(resultList) do
+						local modifiedAddress = result.address + offset
+						local resultFlag = flag or result.flags
+						table.insert(modifiedResults, {address = modifiedAddress, value = result.value, flags = resultFlag})
+					end
+					gg.loadResults(modifiedResults)
+					if choice == 1 then
+						Hunter_InBattle_PotionCoolTime()
+					elseif choice == 2 then
+						Hunter_InBattle_InvicibleTime()
+					elseif choice == 3 then
+						Hunter_InBattle_SpGaugeCapacity()
+					elseif choice == 4 then
+						Hunter_InBattle_SpGaugeDownPenalty()
+					end
+				elseif choice == 5 then
+					mainMenu()
+				end
+			end
+		end
+--	メインメニュー/	ハンター/	戦闘時/	回復薬のクールタイム	--
+			function Hunter_InBattle_PotionCoolTime()
+				gg.getResults(9999)	
+				gg.setVisible(false)
+				local PotionCoolTime = {"15", "0"}
+				HunterInBattlePotionCoolTimeMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    なし",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/戦闘時/回復薬のクールタイム")
+				if HunterInBattlePotionCoolTimeMenu == nil then
+					temporarilyhide()	
+					Hunter_InBattle_PotionCoolTime()
+				else
+					if HunterInBattlePotionCoolTimeMenu >= 1 and HunterInBattlePotionCoolTimeMenu <= 2 then
+						local chosenValue = PotionCoolTime[HunterInBattlePotionCoolTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Hunter_InBattle_PotionCoolTime()
+					elseif HunterInBattlePotionCoolTimeMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンター回復薬のクールタイムを入力\n(秒[s],デフォ:15,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Hunter_InBattle_PotionCoolTime()
+					elseif HunterInBattlePotionCoolTimeMenu == 4 then
+						Hunter_InBattle()
+					end
+				end
+			end
+--	メインメニュー/	ハンター/	戦闘時/	復活時の無敵時間	--
+			function Hunter_InBattle_InvicibleTime()
+				gg.getResults(9999)	
+				gg.setVisible(false)	
+				local InvicibleTime = {"2.5", "120"}
+				HunterInBattleInvicibleTimeMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    120秒",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/戦闘時/復活時の無敵時間")
+				if HunterInBattleInvicibleTimeMenu == nil then
+					temporarilyhide()	
+					Hunter_InBattle_InvicibleTime()
+				else
+					if HunterInBattleInvicibleTimeMenu >= 1 and HunterInBattleInvicibleTimeMenu <= 2 then
+						local chosenValue = InvicibleTime[HunterInBattleInvicibleTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)
+						Hunter_InBattle_InvicibleTime()
+					elseif HunterInBattleInvicibleTimeMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンター復活時の無敵時間を入力\n(秒[s],デフォ:2.5,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Hunter_InBattle_InvicibleTime()
+					elseif HunterInBattleInvicibleTimeMenu == 4 then
+						Hunter_InBattle()
+					end
+				end
+			end		
+--	メインメニュー/	ハンター/	戦闘時/	SPゲージの最大容量	--
+			function Hunter_InBattle_SpGaugeCapacity()
+				gg.getResults(9999)	
+				gg.setVisible(false)	
+				local SpGaugeCapacity = {"230", "1"}
+				HunterInBattleSpGaugeCapacityMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    即フルチャージ",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/戦闘時/SPゲージの最大容量")
+				if HunterInBattleSpGaugeCapacityMenu == nil then
+					temporarilyhide()	
+					Hunter_InBattle_SpGaugeCapacity()
+				else
+					if HunterInBattleSpGaugeCapacityMenu >= 1 and HunterInBattleSpGaugeCapacityMenu <= 2 then
+						local chosenValue = SpGaugeCapacity[HunterInBattleSpGaugeCapacityMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Hunter_InBattle_SpGaugeCapacity()
+					elseif HunterInBattleSpGaugeCapacityMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンターSPゲージの最大容量を入力\n(デフォ:230,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Hunter_InBattle_SpGaugeCapacity()
+					elseif HunterInBattleSpGaugeCapacityMenu == 4 then
+						Hunter_InBattle()
+					end
+				end
+			end
+--	メインメニュー/	ハンター/	戦闘時/	ダウン時のSPゲージ減少量	--
+			function Hunter_InBattle_SpGaugeDownPenalty()
+				gg.getResults(9999)	
+				gg.setVisible(false)	
+				local SpGaugeDownPenalty = {"20", "0"}
+				HunterInBattleSpGaugeDownPenaltyMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    なし",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/戦闘時/ダウン時のSPゲージ減少量")
+				if HunterInBattleSpGaugeDownPenaltyMenu == nil then
+					temporarilyhide()	
+					Hunter_InBattle_SpGaugeDownPenalty()
+				else
+					if HunterInBattleSpGaugeDownPenaltyMenu >= 1 and HunterInBattleSpGaugeDownPenaltyMenu <= 2 then
+						local chosenValue = SpGaugeDownPenalty[HunterInBattleSpGaugeDownPenaltyMenu]
+						gg.editAll(chosenValue, gg.TYPE_DWORD)
+						Hunter_InBattle_SpGaugeDownPenalty()
+					elseif HunterInBattleSpGaugeDownPenaltyMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンターダウン時のSPゲージ減少量を入力\n(割合[%],デフォ:20,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end					
+						Hunter_InBattle_SpGaugeDownPenalty()
+					elseif HunterInBattleSpGaugeDownPenaltyMenu == 4 then
+						Hunter_InBattle()
+					end
+				end
+			end
+--	メインメニュー/	ハンター/	回避	--	
+		function Hunter_Dodge()
+			gg.clearList()
+			gg.clearResults()
+			gg.setVisible(false)
+			HunterActionMenu = gg.choice({
+			"[1]    ジャスト回避無敵時間",
+			"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/回避")
+			if HunterActionMenu == nil then
+				temporarilyhide()	
+				Hunter_Dodge()
+			else
+				if HunterActionMenu == 1 then
+					Hunter_Action_JustDodge()
+				elseif HunterActionMenu == 2 then
+					 Hunter()
+				end
+			end
+		end			
+--	メインメニュー/	ハンター/	回避/	ジャスト回避無敵時間	--	
+			function Hunter_Action_JustDodge_InvisibleTime()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				local InvicibleTime = {"0.5", "120"}
+				HunterActionJustDodgeInvisibleTimeMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    120秒",
+				"[3]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/ハンター/アクション/ジャスト回避/無敵時間")
+				if HunterActionJustDodgeInvisibleTimeMenu == nil then
+					temporarilyhide()	
+					Hunter_Action_JustDodge_InvisibleTime()
+				else
+					if HunterActionJustDodgeInvisibleTimeMenu >= 1 and HunterActionJustDodgeInvisibleTimeMenu <= 2 then
+						local chosenValue = InvicibleTime[HunterActionJustDodgeInvisibleTimeMenu]
+						gg.editAll(chosenValue, gg.TYPE_FLOAT)	
+						Hunter_Action_JustDodge_InvisibleTime()
+					elseif HunterActionJustDodgeInvisibleTimeMenu == 3 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "ハンターのジャスト回避無敵時間を入力\n(秒[s],デフォ:0.5,Float)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_FLOAT)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Hunter_Action_JustDodge_InvisibleTime()
+					elseif HunterAction_JustDodgeInvisibleTimeMenu == 4 then	
+						Hunter_Action_JustDodge()
+					end
+				end
+			end
+--	メインメニュー/	モンスター	--
+	function Monster()
+		gg.clearList()
+		gg.clearResults()		
+		gg.setVisible(false)	
+		MonsterMenu = gg.choice({
+		"[1]    動作速度",
+		"[2]    部位破壊",
+		"[3]    弱点属性",
+		"[4]    耐性",
+		"[5]    捕獲したモンスター",
+		"[←]    もどる"
+		}, nil,"メインメニュー/モンスター")
+		if MonsterMenu == nil then
+			temporarilyhide()	
+			Monster()
+		else
+			if MonsterMenu == 1 then	
+				gg.setVisible(false)
+				valueFromClass("MotionController", "0x28", false, false, gg.TYPE_FLOAT)
+				gg.getResults(9999)		
+				gg.refineNumber("0~", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)				
+				Monster_MotionSpeed()	
+			elseif MonsterMenu == 2 then	
+				gg.setVisible(false)
+				valueFromClass("PartBreakInfo", "0x10", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)				        
+				Monster_PartBreak()	
+			elseif MonsterMenu == 3 then
+				gg.setVisible(false)
+				valueFromClass("ElementalWeaknessChart", "0x10", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)			
+				Monster_WeaknesElementType()
+			elseif MonsterMenu == 4 then
+				gg.setVisible(false)
+				valueFromClass("EnemyAilmentsInfo", "0x10", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)				
+				Monster_Resistance()		
+			elseif MonsterMenu == 5 then
+				gg.setVisible(false)
+				valueFromClass("MarkedMonsterProto", "0x10", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)			
+				Monster_Marked()		
+			elseif MonsterMenu == 6 then
+				mainMenu()	
+			end
+		end
+	end		
+--	メインメニュー/	モンスター/	動作速度	--
+		function Monster_MotionSpeed()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local MonsterMotionSpeed = {"1","0","5"}
+			MonsterMotionSpeedMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    凍結",
+			"[3]    5倍",
+			"[4]    任意の値",
+			"[←]    もどる"
+			}, nil,"メインメニュー/モンスター/動作速度")
+			if MonsterMotionSpeedMenu == nil then
+				temporarilyhide()	
+				Monster_MotionSpeed()
+			else
+				if MonsterMotionSpeedMenu >= 1 and MonsterMotionSpeedMenu <= 3 then
+					local chosenValue = MonsterMotionSpeed[MonsterMotionSpeedMenu]
+					gg.editAll(chosenValue, gg.TYPE_FLOAT)	
+					Monster_MotionSpeed()
+				elseif MonsterMotionSpeedMenu == 4 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "モンスター動作速度を入力\n(倍率,デフォ:1,Float)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_FLOAT)
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					Monster_MotionSpeed()
+				elseif MonsterMotionSpeedMenu == 5 then
+					Monster()
+				end	
+			end	
+		end	
+--	メインメニュー/	モンスター/	部位破壊	--		
+		function Monster_PartBreak()
+			gg.clearResults()
+			gg.setVisible(false)
+			local function modifyResults(offset, valueType, editValue)
+				local resultList = gg.getListItems()
+				local modifiedResults = {}
+				for _, result in ipairs(resultList) do
+					local modifiedAddress = result.address + offset
+					table.insert(modifiedResults, { address = modifiedAddress, value = editValue, flags = valueType })
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+				gg.editAll(editValue, valueType)
+				gg.clearResults()
+			end
+			MonsterPartBreakMenu = gg.choice({
+				"[1]    デフォルト",
+				"[2]    容易化",
+				"[3]    任意の値",
+				"[←]    もどる"
+			}, nil, "メインメニュー/モンスター/部位破壊")
+			if MonsterPartBreakMenu == nil then
+				temporarilyhide()
+				Monster_PartBreak()
+			else
+				if MonsterPartBreakMenu == 1 then
+					modifyResults(0x0, gg.TYPE_DWORD, "100")
+					modifyResults(0x4, gg.TYPE_FLOAT, "0.15000000596")
+					Monster_PartBreak()
+				elseif MonsterPartBreakMenu == 2 then
+					modifyResults(0x0, gg.TYPE_DWORD, "10000000")
+					modifyResults(0x4, gg.TYPE_FLOAT, "10000000")
+					Monster_PartBreak()
+				elseif MonsterPartBreakMenu == 3 then
+					gg.setVisible(false)
+					local prompt = {"その1.モンスターの部位破壊値を入力\n(デフォ:100,DWORD)","その2.モンスターの部位破壊値を入力\n(デフォ:0.15000000596,Float)"}
+					local userInput = gg.prompt(prompt, {[1] = "", [2] = ""}, {[1] = gg.TYPE_DWORD, [2] = gg.TYPE_FLOAT})
+					if not userInput then
+						Monster_PartBreak()
+					end					
+					local value1 = userInput[1]
+					local value2 = userInput[2]
+					modifyResults(0x0, gg.TYPE_DWORD, value1)
+					modifyResults(0x4, gg.TYPE_FLOAT, value2)
+					Monster_PartBreak()
+				elseif MonsterPartBreakMenu == 4 then
+					Monster()
+				end
+			end
+		end
+--	メインメニュー/	モンスター/	弱点属性	--
+		function Monster_WeaknesElementType()
+			gg.clearResults()		
+			local offsets = {0x0, 0x4,0x8,0xC,0x10,0x14,0x18,0x1C}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end							
+			gg.setVisible(false)	
+			MonsterWeaknesElementTypeMenu = gg.choice({
+			"[1]    火",
+			"[2]    水",
+			"[3]    雷",
+			"[4]    氷",
+			"[5]    龍",
+			"[6]    毒",
+			"[7]    麻痺",
+			"[8]    睡眠",		
+			"[←]    もどる"
+			}, nil,"メインメニュー/モンスター/弱点属性")
+			if MonsterWeaknesElementTypeMenu == nil then
+				temporarilyhide()	
+				Monster_WeaknesElementType()
+			else
+				if MonsterWeaknesElementTypeMenu == 1 then	
+					applyOffset(offsets[1])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeFireMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/火")
+						if MonsterWeaknesElementTypeFireMenu == nil then
+						else
+							if MonsterWeaknesElementTypeFireMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeFireMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 2 then	
+					applyOffset(offsets[2])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeWaterMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/水")
+						if MonsterWeaknesElementTypeWaterMenu == nil then
+						else
+							if MonsterWeaknesElementTypeWaterMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeWaterMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 3 then	
+					applyOffset(offsets[3])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeThunderMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/雷")
+						if MonsterWeaknesElementTypeThunderMenu == nil then
+						else
+							if MonsterWeaknesElementTypeThunderMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeThunderMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 4 then	
+					applyOffset(offsets[4])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeIceMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/氷")
+						if MonsterWeaknesElementTypeIceMenu == nil then
+						else
+							if MonsterWeaknesElementTypeIceMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeIceMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 5 then	
+					applyOffset(offsets[5])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeDragonMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/龍")
+						if MonsterWeaknesElementTypeDragonMenu == nil then
+						else
+							if MonsterWeaknesElementTypeDragonMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeDragonMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 6 then	
+					applyOffset(offsets[6])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypePoisonMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/毒")
+						if MonsterWeaknesElementTypePoisonMenu == nil then
+						else
+							if MonsterWeaknesElementTypePoisonMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypePoisonMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 7 then	
+					applyOffset(offsets[7])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeparalysisMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/麻痺")
+						if MonsterWeaknesElementTypeparalysisMenu == nil then
+						else
+							if MonsterWeaknesElementTypeparalysisMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeparalysisMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 8 then	
+					applyOffset(offsets[8])
+					while true do
+						gg.setVisible(false)	
+						MonsterWeaknesElementTypeSleepMenu = gg.choice({
+						"[1]    追加",
+						"[2]    削除"
+						}, nil,"メインメニュー/モンスター/弱点属性/睡眠")
+						if MonsterWeaknesElementTypeSleepMenu == nil then
+						else
+							if MonsterWeaknesElementTypeSleepMenu == 1 then
+								gg.editAll("1", gg.TYPE_DWORD)
+							elseif MonsterWeaknesElementTypeSleepMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_WeaknesElementType()
+				elseif MonsterWeaknesElementTypeMenu == 9 then
+					Monster()	
+				end
+			end
+		end	
+--	メインメニュー/	モンスター/	耐性	--		
+		function Monster_Resistance()
+			gg.clearResults()
+			local offsets = {0x0, 0x4, 0x8,0xC}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end		
+			gg.setVisible(false)
+			Monster_ResistanceMenu = gg.choice({
+				"[1]    毒",
+				"[2]    麻痺",
+				"[3]    気絶",
+				"[4]    睡眠",				
+				"[←]    もどる"
+			}, nil,"メインメニュー/ハンター/体力")
+			if Monster_ResistanceMenu == nil then
+				temporarilyhide()	
+				Monster_Resistance()
+			else	
+				if Monster_ResistanceMenu == 1 then	
+					applyOffset(offsets[1])
+					while true do
+						gg.setVisible(false)	
+						MonsterResistancePoisonMenu = gg.choice({
+						"[1]    デフォルト",
+						"[2]    なし"
+						}, nil,"メインメニュー/モンスター/耐性/毒")
+						if MonsterResistancePoisonMenu == nil then
+						else
+							if MonsterResistancePoisonMenu == 1 then
+								gg.editAll("100", gg.TYPE_DWORD)
+							elseif MonsterResistancePoisonMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end
+					Monster_Resistance()
+				elseif Monster_ResistanceMenu == 2 then	
+					applyOffset(offsets[2])
+					while true do
+						gg.setVisible(false)	
+						MonsterResistanceParalysisMenu = gg.choice({
+						"[1]    デフォルト",
+						"[2]    なし"
+						}, nil,"メインメニュー/モンスター/耐性/麻痺")
+						if MonsterResistanceParalysisMenu == nil then
+						else
+							if MonsterResistanceParalysisMenu == 1 then
+								gg.editAll("100", gg.TYPE_DWORD)
+							elseif MonsterResistanceParalysisMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end						
+					Monster_Resistance()
+				elseif Monster_ResistanceMenu == 3 then	
+					applyOffset(offsets[3])
+					while true do
+						gg.setVisible(false)	
+						MonsterResistanceFlashMenu = gg.choice({
+						"[1]    デフォルト",
+						"[2]    なし"
+						}, nil,"メインメニュー/モンスター/耐性/気絶")
+						if MonsterResistanceFlashMenu == nil then
+						else
+							if MonsterResistanceFlashMenu == 1 then
+								gg.editAll("150", gg.TYPE_DWORD)
+							elseif MonsterResistanceFlashMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end						
+					Monster_Resistance()
+				elseif Monster_ResistanceMenu == 4 then	
+					applyOffset(offsets[4])
+					while true do
+						gg.setVisible(false)	
+						MonsterResistanceSleepMenu = gg.choice({
+						"[1]    デフォルト",
+						"[2]    なし"
+						}, nil,"メインメニュー/モンスター/耐性/睡眠")
+						if MonsterResistanceSleepMenu == nil then
+						else
+							if MonsterResistanceSleepMenu == 1 then
+								gg.editAll("200", gg.TYPE_DWORD)
+							elseif MonsterResistanceSleepMenu == 2 then
+								gg.editAll("0", gg.TYPE_DWORD)
+							end
+							break
+						end
+					end						
+					Monster_Resistance()
+				elseif Monster_ResistanceMenu == 5 then		
+					Monster()
+				end
+			end
+		end	
+--	メインメニュー/	モンスター/	捕獲したモンスター	--
+		function Monster_Marked()
+			gg.clearResults()
+			local offsets = {0x0,0x30}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+			end			
+			gg.setVisible(false)
+			MonsterMarkedMenu = gg.choice({
+			"[1]    モンスター変更",
+			"[3]    グレード",
+			"[←]    もどる"
+			}, nil,"メインメニュー/モンスター/捕獲したモンスター")
+			if MonsterMarkedMenu == nil then
+				temporarilyhide()
+				Monster_Marked()
+			else
+				if MonsterMarkedMenu == 1 then
+					applyOffset(offsets[1])		
+					Monster_Marked_ID()
+				elseif MonsterMarkedMenu == 2 then 
+					applyOffset(offsets[2])	
+					Monster_Marked_Grade()
+				elseif MonsterMarkedMenu == 3 then
+					Monster()
+				end
+			end
+		end				
+--	メインメニュー/	モンスター/	捕獲したモンスター/  モンスター変更	--
+			function Monster_Marked_ID()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				MonsterMarkedIDMenu = gg.choice({
+				"[1]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/モンスター/捕獲したモンスター/モンスター変更")
+				if MonsterMarkedIDMenu == nil then
+					temporarilyhide()
+					Monster_Marked_ID()
+				else
+					if MonsterMarkedIDMenu == 1 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "変更するモンスターIDを入力\n(範囲:1~33,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Monster_Marked_ID()
+					elseif MonsterMarkedIDMenu == 2 then
+						Monster_Marked()
+					end
+				end
+			end	
+--	メインメニュー/	モンスター/	捕獲したモンスター/	グレード	--
+			function Monster_Marked_Grade()
+				gg.getResults(9999)
+				gg.setVisible(false)
+				MonsterMarkedGradeMenu = gg.choice({
+				"[1]    任意の値",
+				"[←]    もどる"
+				}, nil,"メインメニュー/モンスター/捕獲したモンスター/グレード")
+				if MonsterMarkedGradeMenu == nil then
+					temporarilyhide()
+					Monster_Marked_Grade()
+				else
+					if MonsterMarkedGradeMenu == 1 then
+						while true do
+							gg.setVisible(false)
+							val = gg.prompt({[1] = "モンスターグレードを入力\n(範囲:1~10,Dword)"}, {[1] = ""})
+							if val and val[1] ~= nil then
+								gg.editAll(val[1], gg.TYPE_DWORD)
+								break
+							else
+								temporarilyhide()
+							end
+						end
+						Monster_Marked_Grade()
+					elseif MonsterMarkedGradeMenu == 2 then
+						Monster_Marked()
+					end
+				end
+			end			
+--	メインメニュー/	マップ	--
+	function Map()
+		gg.clearList()
+		gg.clearResults()
+		gg.setVisible(false)
+		MapMenu = gg.choice({
+		"[1]    読み込み範囲",
+		"[2]    ハンターアクセス範囲",
+		"[3]    オトモアクセス範囲",
+		"[4]    ブースト時のアクセス範囲",
+		"[←]    もどる"
+		}, nil,"メインメニュー/マップ")
+		if MapMenu == nil then
+			temporarilyhide()
+			Map()
+		else
+			if MapMenu == 1 then
+				gg.setVisible(false)
+				valueFromClass("MapViewport","0x30", false, false, gg.TYPE_DOUBLE)
+				gg.getResults(9999)
+				gg.refineNumber("0~100,000", gg.TYPE_DOUBLE, false, gg.SIGN_EQUAL, 0, -1, 0)			
+				Map_LoadingRange()
+			elseif MapMenu == 2 then 
+				gg.setVisible(false)
+				valueFromClass("DistanceSensor","0x3C", false, false, gg.TYPE_FLOAT)
+				Map_HunterAccessRange()
+			elseif MapMenu == 3 then
+				gg.setVisible(false)
+				valueFromClass("DistanceLayerInfo","0x10", false, false, gg.TYPE_FLOAT)
+				Map_OtomoAccessRange()
+			elseif MapMenu == 4 then
+				gg.setVisible(false)
+				valueFromClass("FieldConfig","0x20", false, false, gg.TYPE_FLOAT)			
+				Map_BoostAccessRange()
+			elseif MapMenu == 5 then
+				mainMenu()
+			end
+		end
+	end
+	--	メインメニュー/	マップ/	読み込み範囲	--
+		function Map_LoadingRange()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local MapLoadingRange = {"350", "700"}
+			MapLoadingRangeMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    2倍",
+			"[3]    任意の値",
+			"[←]    もどる"
+			},nil,"メインメニュー/マップ/読み込み範囲")
+			if MapLoadingRangeMenu == nil then
+				temporarilyhide()
+				Map_LoadingRange()
+			else
+				if MapLoadingRangeMenu >= 1 and MapLoadingRangeMenu <= 2 then
+					local chosenValue = MapLoadingRange[MapLoadingRangeMenu]
+					gg.editAll(chosenValue, gg.TYPE_DOUBLE)
+					Map_LoadingRange()
+				elseif MapLoadingRangeMenu == 3 then
+					while true do
+						gg.setVisible(false)
+    					val = gg.prompt({[1] = "マップ読み込み範囲を入力\n(半径[m],デフォ:350,Double)"}, {[1] = ""})
+    					if val and val[1] ~= nil then
+    						gg.editAll(val[1], gg.TYPE_DOUBLE)
+							break
+						else
+							temporarilyhide()
+						end
+					end				
+					Map_LoadingRange()
+				elseif MapLoadingRangeMenu == 4 then
+					Map()
+				end
+			end		
+		end
+--	メインメニュー/	マップ/	ハンターアクセス範囲	--
+		function Map_HunterAccessRange()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local HunterAccessRange = {"1", "10"}
+			local MapHunterAccessRangeMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    10倍",
+			"[3]    任意の値",
+			"[←]    もどる"
+			}, nil, "メインメニュー/マップ/ハンターアクセス範囲")
+			if MapHunterAccessRangeMenu == nil then
+				temporarilyhide()
+				Map_HunterAccessRange()
+			else
+				if MapHunterAccessRangeMenu >= 1 and MapHunterAccessRangeMenu <= 2 then
+					local chosenValue = HunterAccessRange[MapHunterAccessRangeMenu]
+					gg.editAll(chosenValue, gg.TYPE_FLOAT)
+					Map_HunterAccessRange()
+				elseif MapHunterAccessRangeMenu == 3 then
+					while true do
+						gg.setVisible(false)
+    					val = gg.prompt({[1] = "ハンターアクセス範囲を入力\n(倍率,デフォ:1,Float)"}, {[1] = ""})
+    					if val and val[1] ~= nil then
+    						gg.editAll(val[1], gg.TYPE_FLOAT)
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					Map_HunterAccessRange()
+				elseif MapHunterAccessRangeMenu == 4 then
+					Map()
+				end
+			end				
+		end		
+--	メインメニュー/	マップ/	オトモアクセス範囲	--
+		function Map_OtomoAccessRange()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local OtomoAccessRange = {"80", "800"}
+			local MapOtomoAccessRangeMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    10倍",
+			"[3]    任意の値",
+			"[←]    もどる"
+			}, nil, "メインメニュー/マップ/ハンターアクセス範囲")
+			if MapOtomoAccessRangeMenu == nil then
+				temporarilyhide()
+				Map_OtomoAccessRange()
+			else
+				if MapOtomoAccessRangeMenu >= 1 and MapOtomoAccessRangeMenu <= 2 then
+					local chosenValue = OtomoAccessRange[MapOtomoAccessRangeMenu]
+					gg.editAll(chosenValue, gg.TYPE_FLOAT)
+					Map_OtomoAccessRange()
+				elseif MapOtomoAccessRangeMenu == 3 then
+					while true do
+						gg.setVisible(false)
+    					val = gg.prompt({[1] = "オトモアクセス範囲を入力\n(デフォ:80,Float)"}, {[1] = ""})
+    					if val and val[1] ~= nil then
+    						gg.editAll(val[1], gg.TYPE_FLOAT)
+							break
+						else
+							temporarilyhide()
+						end
+					end	
+					Map_OtomoAccessRange()
+				elseif MapOtomoAccessRangeMenu == 4 then
+					Map()
+				end
+			end				
+		end		
+--	メインメニュー/	マップ/	ブースト時の範囲	--
+		function Map_BoostAccessRange()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local BoostAccessRange = {"1.5", "10.5"}
+			local MapBoostAccessRangeMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    7倍",
+			"[3]    任意の値",
+			"[←]    もどる"
+			}, nil, "メインメニュー/マップ/ハンターアクセス範囲")
+			if MapBoostAccessRangeMenu == nil then
+				temporarilyhide()
+				Map_BoostAccessRange()
+			else
+				if MapBoostAccessRangeMenu >= 1 and MapBoostAccessRangeMenu <= 2 then
+					local chosenValue = BoostAccessRange[MapBoostAccessRangeMenu]
+					gg.editAll(chosenValue, gg.TYPE_FLOAT)
+					Map_BoostAccessRange()
+				elseif MapBoostAccessRangeMenu == 3 then
+					while true do
+    					gg.setVisible(false)
+    					val = gg.prompt({[1] = "ブースト時のアクセス範囲を入力\n(倍率,デフォ:1.5,Float)"}, {[1] = ""})
+    					if val and val[1] ~= nil then
+    						gg.editAll(val[1], gg.TYPE_FLOAT)
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					Map_BoostAccessRange()
+				elseif MapBoostAccessRangeMenu == 4 then
+					Map()
+				end
+			end		
+		end		
+--	メインメニュー/	全般設定	--
+	function GeneralSettings()
+		gg.clearList()
+		gg.clearResults()
+		gg.setVisible(false)
+		GeneralSettingsMenu = gg.choice({
+		"[1]    速度制限",
+		"[2]    ゲーム速度",
+		"[3]    演出カット",
+		"[←]    もどる"
+		}, nil,"メインメニュー/全般設定")
+		if GeneralSettingsMenu == nil then
+			temporarilyhide()
+			GeneralSettings()
+		else
+			if GeneralSettingsMenu == 1 then
+				gg.setVisible(false)
+				valueFromClass("SpeedLimitSettingsProto", "0x10", false, false, gg.TYPE_DWORD)
+				GeneralSettings_SpeedLimit()			
+			elseif GeneralSettingsMenu == 2 then
+				gg.setVisible(false)
+                local functLoop = true
+                if functLoop == true then
+                  instructions()
+                  unityVersion()
+                  functLoop = false
+                end
+                startcb()
+
+				
+				
+local hexConvert = 0x0
+local dataType = 0x0
+local cdOffsetSmall = 0x0
+local cdOffsetBig =  0x0
+local cbOffsetSmall = 0x0
+local anonSpeedOffsetSmall = 0x0
+local anonSpeedOffsetBig = 0x0
+local anonGroupSearchOffset = 0x0
+local function isProcess64Bit()
+  -- Function -> by CmP: https://gameguardian.net/forum/topic/36604-how-to-get-instruction-set-architecture-on-emulator-virtual-memory-addresses/?do=findComment&comment=135506
+  local regions = gg.getRangesList()
+  local lastAddress = regions[#regions]["end"]
+  return (lastAddress >> 32) ~= 0
+end
+local function cb_nothingFound()
+  if gg.getResultsCount() == 0 then
+    gg.alert("Search not found")
+    start()
+  end
+end
+local ISA = isProcess64Bit()
+local resultsCount = gg.getResultsCount()
+gg.clearResults()
+local function instructions()
+  if ISA == false then -- if true then 32 bit else 64 bit
+    hexConvert = 0x100000000
+    dataType = 4
+    cdOffsetSmall = 0xC
+    cdOffsetBig =  0xB58
+    cbOffsetSmall = 0x1C
+    anonSpeedOffsetSmall = 0xE4
+    anonSpeedOffsetBig = 0xEC
+    anonGroupSearchOffset = 0x30
+  else
+    hexConvert = 0x0
+    dataType = 32
+    cdOffsetSmall = 0x18
+    cdOffsetBig = 0x16B0
+    cbOffsetSmall = 0x38
+    cbOffsetBig = 0x48
+    anonSpeedOffsetSmall = 0xF4
+    anonSpeedOffsetBig = 0xFC
+    anonGroupSearchOffset = 0x44
+  end
+end
+local function unityVersion()
+  gg.searchNumber(":Expected version: ", gg.TYPE_BYTE, gg.setRanges(16384))
+  if gg.getResultsCount() == 0 then
+    gg.alert("This game is not made with Unity, fuzzy will be automatically activated!")
+    gg.alert("Make sure your game is open, don't hide it on the background!")
+    randomized()
+    os.exit()
+  else
+    local count = gg.getResultsCount()
+    local results = gg.getResults(count)
+    values = {}
+    for i = 18, count, 18 do
+      local resultAddress = results[i].address
+      for j = 1, 7 do
+        values[#values + 1] = {address = resultAddress + j, flags = gg.TYPE_BYTE}
+      end
+      values = gg.getValues(values)
+    end
+    local str = ''
+    for i, v in ipairs(values) do
+      str = str .. string.char(v.value & 0xFF)
+    end
+    gg.clearResults()
+    if values[1].value <= 0x35 and values[2].value == 0x2E and values[3].value <= 0x35 then -- unity versions 5.5 or below
+      gg.alert("Unity version "..str..",This version is to old. Use Speedhack through Cb or Fuzzy")
+      anonGroupSearchOffset = 0x3C
+      cbOffsetSmall = 0x24
+      anonSpeedOffsetSmall = 0xBC
+    end
+    gg.clearResults()
+  end
+end
+local function finalSpeedResult()
+  resultsCount = gg.getResultsCount()
+  local values = gg.getResults(resultsCount)
+  local results = {}
+  local speed = {}
+  for b = 1, #values do
+    local loop = 0x0
+    for i = 1, 70 do
+      results[#results + 1] = {address = values[b].address + loop, flags = gg.TYPE_FLOAT}
+      loop = loop + 4
+    end
+  end
+  results = gg.getValues(results)
+  for i, v in ipairs(results) do
+    if v.value == 1 then
+      speed[#speed +1] = {address = v.address, flags = v.flags, name = "Speed"}
+      break
+    end
+  end
+  if #speed ~= 0 then
+    gg.toast("Time.timeScale found")
+    gg.addListItems(speed)
+    gg.clearResults()
+  end
+end
+local function filterCb()
+  local b = {}
+  gg.clearResults()
+  gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC | gg.REGION_OTHER)
+  gg.searchNumber("h 00 00 80 3F CD CC 4C 3E 00 00 00 41 00 00 C8 42 00 00 B4 43 0A D7 23 3C CD CC 4C 3E 00 00 40 3F 00 00 00")
+  if gg.getResultsCount() == 0 then
+    gg.searchNumber("-9.81000041962", gg.TYPE_FLOAT)
+    cb_nothingFound()
+    resultsCount = gg.getResultsCount()
+    local t = gg.getResults(resultsCount)
+    for i, v in ipairs(t) do
+      v.address = v.address + 0xC
+    end
+    gg.loadResults(t)
+    gg.refineNumber("1", gg.TYPE_FLOAT)
+    cb_nothingFound()
+    resultsCount = gg.getResultsCount()
+    b = gg.getResults(resultsCount)
+  elseif gg.getResultsCount() ~= 0 then
+    gg.refineNumber("h 00 00 80 3F", gg.TYPE_FLOAT)
+    cb_nothingFound()
+    resultsCount = gg.getResultsCount()
+    local a = gg.getResults(resultsCount)
+    for i, v in ipairs(a) do
+      v.flags = gg.TYPE_FLOAT
+    end
+    b = gg.getValues(a)
+  end
+  return b
+end
+local function startcb()
+  local fakeSpeedPointers = {}
+  local b = filterCb()
+  for i, v in ipairs(b) do
+    if v.value == 1 then
+      fakeSpeedPointers[#fakeSpeedPointers + 1] = {address = v.address - anonGroupSearchOffset, flags = gg.TYPE_FLOAT}
+      fakeSpeedPointers[#fakeSpeedPointers + 1] = {address = v.address - 0x48, flags = gg.TYPE_FLOAT}
+      fakeSpeedPointers[#fakeSpeedPointers + 1] = {address = v.address - 0x44, flags = gg.TYPE_FLOAT}
+    end
+  end
+  gg.setRanges(gg.REGION_C_BSS | gg.REGION_OTHER | gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)
+  gg.loadResults(fakeSpeedPointers)
+  gg.searchPointer(0)
+  resultsCount = gg.getResultsCount()
+  local offsetStart = gg.getResults(resultsCount)
+  for i, v in ipairs(offsetStart) do
+    v.address = v.address - cbOffsetSmall
+  end
+  local valu = gg.getValues(offsetStart)
+  for i, v in ipairs(valu) do
+    if ISA == false then
+      v.address = v.value&0xFFFFFFFF
+    else
+      v.address = v.value
+    end
+  end
+  gg.loadResults(valu)
+  finalSpeedResult()
+end
+				GeneralSettings_GameSpeed()
+			elseif GeneralSettingsMenu == 3 then
+				GeneralSettings_CutEffectScene()
+			elseif GeneralSettingsMenu == 4 then
+				mainMenu()
+			end
+		end
+	end
+--	メインメニュー/	全般設定/	速度制限	--
+		function GeneralSettings_SpeedLimit()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local SpeedLimit = {"1", "0"}
+			GeneralSettingsSpeedLimitMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    解除",
+			"[←]    もどる"
+			},nil,"メインメニュー/マップ/速度制限")
+			if GeneralSettingsSpeedLimitMenu == nil then
+				temporarilyhide()
+				GeneralSettings_SpeedLimit()
+			else
+				if GeneralSettingsSpeedLimitMenu >= 1 and GeneralSettingsSpeedLimitMenu <= 2 then
+					local chosenValue = SpeedLimit[GeneralSettingsSpeedLimitMenu]
+					gg.editAll(chosenValue, gg.TYPE_DWORD)
+					GeneralSettings_SpeedLimit()
+				elseif GeneralSettingsSpeedLimitMenu == 3 then
+					GeneralSettings()
+				end
+			end
+		end		
+--	メインメニュー/	全般設定/	ゲーム速度	--
+		function GeneralSettings_GameSpeed()
+            gg.getResults(9999)
+            gg.setVisible(false)
+			local GameSpeed = {"1", "4"}
+			GeneralSettingsGameSpeedMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    4倍",
+			"[3]    任意の値",
+			"[←]    もどる"
+			},nil,"メインメニュー/全般設定/ゲーム速度")
+			if GeneralSettingsGameSpeedMenu == nil then
+				temporarilyhide()
+				GeneralSettings_GameSpeed()
+			else
+				if GeneralSettingsGameSpeedMenu >= 1 and GeneralSettingsGameSpeedMenu <= 2 then
+					local chosenValue = GameSpeed[GeneralSettingsGameSpeedMenu]
+					gg.editAll(chosenValue, gg.TYPE_FLOAT)
+				    GeneralSettings_GameSpeed()
+				elseif GeneralSettingsGameSpeedMenu == 3 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "ゲーム速度を入力\n(倍率,デフォ:1,Float)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_FLOAT)
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					GeneralSettings_GameSpeed()
+				elseif  GeneralSettingsGameSpeedMenu == 4 then
+				    GeneralSettings()
+				end
+			end
+        end				
+--	メインメニュー/	全般設定/	演出カット	--		
+		function GeneralSettings_CutEffectScene()
+			gg.clearList()
+			gg.clearResults()
+			gg.setVisible(false)
+			GeneralSettingsCutEffectSceneMenu = gg.choice({
+			"[1]    大型モンスターの討伐時",
+			"[2]    大型モンスターの部位破壊時",
+			"[←]    もどる"
+			},nil,"メインメニュー/全般設定/演出カット")
+			if GeneralSettingsCutEffectSceneMenu == nil then
+				temporarilyhide()
+				GeneralSettings_CutEffectScene()
+			else
+				if GeneralSettingsCutEffectSceneMenu == 1 then
+				gg.setVisible(false)
+				valueFromClass("FinishEffectInfo", "0x20", false, false, gg.TYPE_FLOAT)
+				gg.getResults(9999)
+				while true do
+					gg.setVisible(false)	
+					MonsterWeaknesElementTypeFireMenu = gg.choice({
+					"[1]    デフォルト",
+					"[2]    削除"
+					}, nil,"メインメニュー/全般設定/演出カット/大型モンスターの討伐時")
+					if MonsterWeaknesElementTypeFireMenu == nil then
+					else
+						if MonsterWeaknesElementTypeFireMenu == 1 then
+							gg.editAll("2.40000009537", gg.TYPE_FLOAT)
+						elseif MonsterWeaknesElementTypeFireMenu == 2 then
+							gg.editAll("0", gg.TYPE_FLOAT)
+						end
+						break
+					end
+				end				
+				GeneralSettings_CutEffectScene()
+				elseif GeneralSettingsCutEffectSceneMenu == 2 then
+				gg.setVisible(false)
+				valueFromClass("PartBreakEffectInfo", "0x10", false, false, gg.TYPE_FLOAT)
+				gg.getResults(9999)
+				while true do
+					gg.setVisible(false)	
+					MonsterWeaknesElementTypeFireMenu = gg.choice({
+					"[1]    デフォルト",
+					"[2]    削除"
+					}, nil,"メインメニュー/全般設定/演出カット/大型モンスターの部位破壊時")
+					if MonsterWeaknesElementTypeFireMenu == nil then
+					else
+						if MonsterWeaknesElementTypeFireMenu == 1 then
+							gg.editAll("1", gg.TYPE_FLOAT)
+						elseif MonsterWeaknesElementTypeFireMenu == 2 then
+							gg.editAll("0", gg.TYPE_FLOAT)
+						end
+						break
+					end
+				end			
+				GeneralSettings_CutEffectScene()
+				elseif GeneralSettingsCutEffectSceneMenu == 3 then
+					GeneralSettings()
+				end
+			end
+		end		
+--	メインメニュー/	マルチ選択	--
+	function MultiChoice()
+		gg.setVisible(false)
+		local data = {}
+		data[1] = false
+		data[2] = false
+		data[3] = true 
+		data[4] = true
+		data[5] = true  
+		data[6] = true
+		data[7] = true
+		data[8] = false
+		data[9] = false
+		data[10] = false
+		local Prompt = gg.prompt({
+		    "[1]    ゲーム速度 4倍",
+		    "[2]    ワンパン (物理ダメージ)",
+			"[3]    HP増加",
+			"[4]    速度制限解除",
+			"[5]    アクセス範囲拡大",
+			"[6]    部位破壊容易化",
+			"[7]    討伐•部位破壊時の演出カット",			
+			"[8]    モンスター,オトモの動作を凍結",
+			"[9]    SPスキルゲージ即チャージ",
+			"[10]    モンスター弱点全属性追加"
+		}, data, {"checkbox","checkbox","checkbox","checkbox","checkbox","checkbox","checkbox","checkbox","checkbox","checkbox"})
+		if Prompt == nil then
+			temporarilyhide()	
+			mainMenu()
+		end
+		if Prompt[1] == true then
+		    gg.clearList()
+		    gg.clearResults()
+		    gg.setVisible(false)		
+			gg.setRanges(32)
+			gg.searchNumber(2332065482179870720, gg.TYPE_QWORD)
+			HackersHouse = gg.getResults(250000)
+			Offsets = {}
+			Offsets['FirstOffset'] = {}
+			Offsets['SecondOffset'] = {}
+			Offsets['FinalResults'] = {}
+			OffsetsIndex = 1
+			for index, value in ipairs(HackersHouse) do
+				Offsets['FirstOffset'][OffsetsIndex] = {}
+				Offsets['FirstOffset'][OffsetsIndex].address = HackersHouse[index].address + 168
+				Offsets['FirstOffset'][OffsetsIndex].flags = gg.TYPE_QWORD
+				Offsets['SecondOffset'][OffsetsIndex] = {}
+				Offsets['SecondOffset'][OffsetsIndex].address = HackersHouse[index].address + -140
+				Offsets['SecondOffset'][OffsetsIndex].flags = gg.TYPE_QWORD	OffsetsIndex = OffsetsIndex + 1
+			end
+			Offsets['FirstOffset'] = gg.getValues(Offsets['FirstOffset'])
+			Offsets['SecondOffset'] = gg.getValues(Offsets['SecondOffset'])
+			OffsetsIndex = 1
+			for	index, value in ipairs(Offsets['FirstOffset']) do
+				if (Offsets['FirstOffset'][index].value == 4392630932057270955) and (Offsets['SecondOffset'][index].value == 142274797618) then
+					Offsets['FinalResults'][OffsetsIndex] = {}
+					Offsets['FinalResults'][OffsetsIndex] =  Offsets['FirstOffset'][index]
+					OffsetsIndex = OffsetsIndex + 1
+				end
+			end
+			for index, value in ipairs(Offsets['FinalResults']) do
+				Offsets['FinalResults'][index].address = Offsets['FinalResults'][index].address + -4
+				Offsets['FinalResults'][index].flags = 16
+			end
+			gg.loadResults(Offsets['FinalResults'])	
+			gg.getResults(9999)
+			gg.editAll("4",gg.TYPE_FLOAT)
+		end		
+		if Prompt[2] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+			gg.setVisible(false)			
+			valueFromClass("PhysicalDamageData", "0x10", false, false, gg.TYPE_DWORD)
+			local results = gg.getResults(9999)
+			gg.addListItems(results)				
+			gg.clearResults()
+			local offsets = {0x0, 0x4, 0x8, 0xC}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end			
+			applyOffset(offsets[1])
+			gg.editAll("1,500,000", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[2])
+			gg.editAll("1,500,000", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[3])
+			gg.editAll("1,500,000", gg.TYPE_DWORD)
+			applyOffset(offsets[4])
+			gg.editAll("1,500,000", gg.TYPE_DWORD)				
+		end		
+		if Prompt[3] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+            gg.setVisible(false)
+            gg.setRanges(32)
+            gg.searchNumber(6528865127649771520, gg.TYPE_QWORD)
+            HackersHouse = gg.getResults(250000)
+            Offsets = {}
+            Offsets['FirstOffset'] = {}
+            Offsets['SecondOffset'] = {}
+            Offsets['FinalResults'] = {}
+            OffsetsIndex = 1
+            for index, value in ipairs(HackersHouse) do
+                Offsets['FirstOffset'][OffsetsIndex] = {}
+                Offsets['FirstOffset'][OffsetsIndex].address = HackersHouse[index].address + 4
+                Offsets['FirstOffset'][OffsetsIndex].flags = gg.TYPE_QWORD
+                Offsets['SecondOffset'][OffsetsIndex] = {}
+                Offsets['SecondOffset'][OffsetsIndex].address = HackersHouse[index].address + -4
+                Offsets['SecondOffset'][OffsetsIndex].flags = gg.TYPE_QWORD	OffsetsIndex = OffsetsIndex + 1
+            end
+            Offsets['FirstOffset'] = gg.getValues(Offsets['FirstOffset'])
+            Offsets['SecondOffset'] = gg.getValues(Offsets['SecondOffset'])
+            OffsetsIndex = 1
+            for index, value in ipairs(Offsets['FirstOffset']) do
+                if (Offsets['FirstOffset'][index].value == 4538819778057023550) and (Offsets['SecondOffset'][index].value == 100) then
+                	Offsets['FinalResults'][OffsetsIndex] = {}
+                	Offsets['FinalResults'][OffsetsIndex] =  Offsets['FirstOffset'][index]
+                	OffsetsIndex = OffsetsIndex + 1
+                end
+            end
+            for index, value in ipairs(Offsets['FinalResults']) do
+                Offsets['FinalResults'][index].address = Offsets['FinalResults'][index].address + -8
+                Offsets['FinalResults'][index].flags = 4
+            end
+            gg.loadResults(Offsets['FinalResults'])
+            gg.getResults(9999)
+            gg.editAll("10,000,000",gg.TYPE_DWORD)
+            gg.setVisible(false)
+            local results = gg.getResults(9999)
+            gg.addListItems(results)
+	        gg.clearResults(9999)
+            local resultList = gg.getListItems()
+            local offset = 0x8
+            local modifiedResults = {}
+            for _, result in ipairs(resultList) do
+                local modifiedAddress = result.address + offset
+                table.insert(modifiedResults, {address = modifiedAddress, value = result.value, flags = gg.TYPE_DOUBLE})
+            end
+            gg.loadResults(modifiedResults)    
+            gg.getResults(9999)
+            gg.editAll("10,000,000", gg.TYPE_DOUBLE)
+		end
+		if Prompt[4] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+		    gg.setVisible(false)
+			valueFromClass("SpeedLimitSettingsProto", "0x10", false, false, gg.TYPE_DWORD)
+			gg.getResults(9999)
+			gg.editAll("0",gg.TYPE_DWORD)
+		end
+		if Prompt[5] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+			gg.setVisible(false)
+			valueFromClass("MapViewport","0x30", false, false, gg.TYPE_DOUBLE)
+			gg.getResults(9999)
+			gg.refineNumber("0~100,000", gg.TYPE_DOUBLE, false, gg.SIGN_EQUAL, 0, -1, 0)
+			gg.getResults(9999)
+			gg.editAll("700", gg.TYPE_DOUBLE)
+			gg.clearResults()
+			gg.setVisible(false)
+			valueFromClass("DistanceSensor","0x3C", false, false, gg.TYPE_FLOAT)
+			gg.getResults(9999)
+			gg.editAll("10",gg.TYPE_FLOAT)
+		end
+		if Prompt[6] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+            gg.setVisible(false)
+			valueFromClass("PartBreakInfo", "0x10", false, false, gg.TYPE_DWORD)
+            gg.getResults(9999)
+	        gg.editAll("10,000,000", gg.TYPE_DWORD)
+            local results = gg.getResults(9999)
+            gg.addListItems(results)
+	        gg.clearResults(9999)
+            local resultList = gg.getListItems()
+            local offset = 0x4
+            local modifiedResults = {}
+            for _, result in ipairs(resultList) do
+                local modifiedAddress = result.address + offset
+                table.insert(modifiedResults, {address = modifiedAddress, value = result.value, flags = gg.TYPE_FLOAT})
+            end
+            gg.loadResults(modifiedResults)    
+            gg.getResults(9999)	            
+			gg.editAll("10,000,000", gg.TYPE_FLOAT)     		
+		end
+		if Prompt[7] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+			gg.setVisible(false)
+            valueFromClass("FinishEffectInfo", "0x20", false, false, gg.TYPE_FLOAT)
+			gg.getResults(9999)
+	        gg.editAll("0", gg.TYPE_FLOAT)
+            gg.clearResults()
+            gg.setVisible(false)
+			valueFromClass("PartBreakEffectInfo", "0x10", false, false, gg.TYPE_FLOAT)
+			gg.getResults(9999)
+			gg.editAll("0", gg.TYPE_FLOAT)		
+		end		
+		if Prompt[8] == true then
+		    gg.clearList()
+		    gg.clearResults()
+			gg.setVisible(false)
+			valueFromClass("MotionController", "0x28", false, false, gg.TYPE_FLOAT)
+			gg.getResults(9999)		
+			gg.refineNumber("0~", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)
+			gg.getResults(9999)		
+			gg.editAll("0",gg.TYPE_FLOAT)
+		end		
+		if Prompt[9] == true then
+            gg.clearList()
+		    gg.clearResults()
+		    gg.setVisible(false)
+			valueFromClass("BattleConfig", "0xC4", false, false, gg.TYPE_DWORD)
+			gg.getResults(9999)
+			gg.editAll("1",gg.TYPE_DWORD)
+		end
+		if Prompt[10] == true then 
+		    gg.clearList()
+		    gg.clearResults()
+			gg.setVisible(false)
+			valueFromClass("ElementalWeaknessChart", "0x10", false, false, gg.TYPE_DWORD)
+			local results = gg.getResults(9999)
+			gg.addListItems(results)			
+			local offsets = {0x0,0x4,0x8,0xC,0x10,0x14,0x18,0x1C}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end						
+		    applyOffset(offsets[1])
+			gg.editAll("1", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[2])
+			gg.editAll("1", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[3])
+			gg.editAll("1", gg.TYPE_DWORD)				
+			gg.clearResults()			
+		    applyOffset(offsets[4])
+			gg.editAll("1", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[5])
+			gg.editAll("1", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[6])
+			gg.editAll("1", gg.TYPE_DWORD)				
+			gg.clearResults()			
+		    applyOffset(offsets[7])
+			gg.editAll("1", gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[8])
+			gg.editAll("1", gg.TYPE_DWORD)
+		end
+	end
+--  メインメニュー/    レイド用    --
+    function Raid()
+		gg.clearList()
+		gg.clearResults()		
+		gg.setVisible(false)	
+		EquipmentMenu = gg.choice({
+		"[1]    ゲーム速度,物理ダメージ 変更",
+		"[←]    もどる"
+		}, nil,"メインメニュー/レイド用")
+		if EquipmentMenu == nil then
+			temporarilyhide()	
+			Equipment()
+		else
+			if EquipmentMenu == 1 then	
+				gg.setVisible(false)			
+				valueFromClass("PhysicalDamageData", "0x10", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)				
+				Raid_GameSpeedPhysicalDamage()
+			elseif EquipmentMenu == 2 then
+				mainMenu()
+			end
+		end
+	end    
+--  メインメニュー/    レイド用/   ゲーム速度,物理ダメージ 変更    --	
+	    function Raid_GameSpeedPhysicalDamage()
+			gg.clearResults()
+			local offsets = {0x0, 0x4, 0x8, 0xC}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end			
+			gg.setVisible(false)
+			RaidGameSpeedPhysicalDamageMenu = gg.choice({
+			"[1]    ほぼデフォルト",
+			"[2]    速度4倍,ワンパン",
+			"[←]    もどる"
+			}, nil,"メインメニュー/レイド用/ゲーム速度,物理ダメージ 変更")
+			if RaidGameSpeedPhysicalDamageMenu == nil then
+				temporarilyhide()	
+				Raid_GameSpeedPhysicalDamage()
+			else	
+				if RaidGameSpeedPhysicalDamageMenu == 1 then
+					applyOffset(offsets[1])
+					gg.editAll("500", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("500", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("500", gg.TYPE_DWORD)
+					applyOffset(offsets[4])
+					gg.editAll("500", gg.TYPE_DWORD)
+    			    gg.clearResults()
+        			gg.setVisible(false)		
+        			gg.setRanges(32)
+        			gg.searchNumber(2332065482179870720, gg.TYPE_QWORD)
+        			HackersHouse = gg.getResults(250000)
+        			Offsets = {}
+        			Offsets['FirstOffset'] = {}
+        			Offsets['SecondOffset'] = {}
+        			Offsets['FinalResults'] = {}
+        			OffsetsIndex = 1
+        			for index, value in ipairs(HackersHouse) do
+        				Offsets['FirstOffset'][OffsetsIndex] = {}
+        				Offsets['FirstOffset'][OffsetsIndex].address = HackersHouse[index].address + 168
+        				Offsets['FirstOffset'][OffsetsIndex].flags = gg.TYPE_QWORD
+        				Offsets['SecondOffset'][OffsetsIndex] = {}
+        				Offsets['SecondOffset'][OffsetsIndex].address = HackersHouse[index].address + -140
+        				Offsets['SecondOffset'][OffsetsIndex].flags = gg.TYPE_QWORD	OffsetsIndex = OffsetsIndex + 1
+        			end
+        			Offsets['FirstOffset'] = gg.getValues(Offsets['FirstOffset'])
+        			Offsets['SecondOffset'] = gg.getValues(Offsets['SecondOffset'])
+        			OffsetsIndex = 1
+        			for	index, value in ipairs(Offsets['FirstOffset']) do
+        				if (Offsets['FirstOffset'][index].value == 4392630932057270955) and (Offsets['SecondOffset'][index].value == 142274797618) then
+        					Offsets['FinalResults'][OffsetsIndex] = {}
+        					Offsets['FinalResults'][OffsetsIndex] =  Offsets['FirstOffset'][index]
+        					OffsetsIndex = OffsetsIndex + 1
+        				end
+        			end
+        			for index, value in ipairs(Offsets['FinalResults']) do
+        				Offsets['FinalResults'][index].address = Offsets['FinalResults'][index].address + -4
+        				Offsets['FinalResults'][index].flags = 16
+        			end
+        			gg.loadResults(Offsets['FinalResults'])	
+        			gg.getResults(9999)
+        		    gg.editAll("1",gg.TYPE_FLOAT)
+					Raid_GameSpeedPhysicalDamage()
+				elseif RaidGameSpeedPhysicalDamageMenu == 2 then
+					applyOffset(offsets[1])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					applyOffset(offsets[4])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)	    
+    			    gg.clearResults()
+        			gg.setVisible(false)		
+        			gg.setRanges(32)
+        			gg.searchNumber(2332065482179870720, gg.TYPE_QWORD)
+        			HackersHouse = gg.getResults(250000)
+        			Offsets = {}
+        			Offsets['FirstOffset'] = {}
+        			Offsets['SecondOffset'] = {}
+        			Offsets['FinalResults'] = {}
+        			OffsetsIndex = 1
+        			for index, value in ipairs(HackersHouse) do
+        				Offsets['FirstOffset'][OffsetsIndex] = {}
+        				Offsets['FirstOffset'][OffsetsIndex].address = HackersHouse[index].address + 168
+        				Offsets['FirstOffset'][OffsetsIndex].flags = gg.TYPE_QWORD
+        				Offsets['SecondOffset'][OffsetsIndex] = {}
+        				Offsets['SecondOffset'][OffsetsIndex].address = HackersHouse[index].address + -140
+        				Offsets['SecondOffset'][OffsetsIndex].flags = gg.TYPE_QWORD	OffsetsIndex = OffsetsIndex + 1
+        			end
+        			Offsets['FirstOffset'] = gg.getValues(Offsets['FirstOffset'])
+        			Offsets['SecondOffset'] = gg.getValues(Offsets['SecondOffset'])
+        			OffsetsIndex = 1
+        			for	index, value in ipairs(Offsets['FirstOffset']) do
+        				if (Offsets['FirstOffset'][index].value == 4392630932057270955) and (Offsets['SecondOffset'][index].value == 142274797618) then
+        					Offsets['FinalResults'][OffsetsIndex] = {}
+        					Offsets['FinalResults'][OffsetsIndex] =  Offsets['FirstOffset'][index]
+        					OffsetsIndex = OffsetsIndex + 1
+        				end
+        			end
+        			for index, value in ipairs(Offsets['FinalResults']) do
+        				Offsets['FinalResults'][index].address = Offsets['FinalResults'][index].address + -4
+        				Offsets['FinalResults'][index].flags = 16
+        			end
+        			gg.loadResults(Offsets['FinalResults'])	
+        			gg.getResults(9999)
+        		    gg.editAll("4",gg.TYPE_FLOAT)
+					Raid_GameSpeedPhysicalDamage()
+				elseif RaidGameSpeedPhysicalDamageMenu == 3 then	
+				    Raid()
+				end
+			end
+		end
+--	メインメニュー/	簡易設定	--
+	function Config()
+		gg.clearList()
+		gg.clearResults()	
+		gg.setVisible(false)	
+		ConfigMenu = gg.choice({
+		"[1]    ゲームスピード変更\n",
+		"[2]    全物理ダメージ変更\n",
+		"[3]    武器会心率,会心ダメージ変更\n",
+		"[4]    ボウガン用\n      ✓   ハンター動作速度変更\n      ✓   弾丸種類変更\n      ✓   反動　(最小)\n      ✓   リロード (最小)\n",		
+		"[←]    もどる"
+		}, nil,"メインメニュー/簡易設定\n")
+		if ConfigMenu == nil then
+			temporarilyhide()
+			Config()
+		else
+			if ConfigMenu == 1 then
+				gg.setVisible(false)
+				gg.setRanges(32)
+				gg.searchNumber(2332065482179870720, gg.TYPE_QWORD)
+				HackersHouse = gg.getResults(250000)
+				Offsets = {}
+				Offsets['FirstOffset'] = {}
+				Offsets['SecondOffset'] = {}
+				Offsets['FinalResults'] = {}
+				OffsetsIndex = 1
+				for index, value in ipairs(HackersHouse) do
+					Offsets['FirstOffset'][OffsetsIndex] = {}
+					Offsets['FirstOffset'][OffsetsIndex].address = HackersHouse[index].address + 168
+					Offsets['FirstOffset'][OffsetsIndex].flags = gg.TYPE_QWORD
+					Offsets['SecondOffset'][OffsetsIndex] = {}
+					Offsets['SecondOffset'][OffsetsIndex].address = HackersHouse[index].address + -140
+					Offsets['SecondOffset'][OffsetsIndex].flags = gg.TYPE_QWORD	OffsetsIndex = OffsetsIndex + 1
+				end
+				Offsets['FirstOffset'] = gg.getValues(Offsets['FirstOffset'])
+				Offsets['SecondOffset'] = gg.getValues(Offsets['SecondOffset'])
+				OffsetsIndex = 1
+				for	index, value in ipairs(Offsets['FirstOffset']) do
+					if (Offsets['FirstOffset'][index].value == 4392630932057270955) and (Offsets['SecondOffset'][index].value == 142274797618) then
+						Offsets['FinalResults'][OffsetsIndex] = {}
+						Offsets['FinalResults'][OffsetsIndex] =  Offsets['FirstOffset'][index]
+						OffsetsIndex = OffsetsIndex + 1
+					end
+				end
+				for index, value in ipairs(Offsets['FinalResults']) do
+					Offsets['FinalResults'][index].address = Offsets['FinalResults'][index].address + -4
+					Offsets['FinalResults'][index].flags = 16
+				end
+				gg.loadResults(Offsets['FinalResults'])
+				Config_GameSpeed()			
+			elseif ConfigMenu == 2 then
+				gg.setVisible(false)			
+				valueFromClass("PhysicalDamageData", "0x10", false, false, gg.TYPE_DWORD)
+				local results = gg.getResults(9999)
+				gg.addListItems(results)				
+				Config_Physical()	
+			elseif ConfigMenu == 3 then
+			    Config_CriticalPlusDamagePercent()
+			elseif ConfigMenu == 4 then
+				while true do
+				temporarilyhide()
+				gg.setVisible(false)
+				local choice = gg.alert("ボウガン用\n\n装備を準備してから実行して下さい\n装備切り替えで一部が無効になります。","はい")
+				if choice == 1 then
+					break
+				end
+			end
+			    Config_Bowgun()
+			elseif ConfigMenu == 5 then				
+			    mainMenu()
+			end
+		end
+	end
+--	メインメニュー/	簡易設定/	ゲーム速度変更	--		
+		function Config_GameSpeed()
+			gg.getResults(9999)
+			gg.setVisible(false)
+			local GameSpeed = {"1", "4"}
+			ConfigGameSpeedMenu = gg.choice({
+			"[1]    デフォルト",
+			"[2]    4倍",
+			"[3]    任意の値",				
+			"[←]    もどる"
+			}, nil,"メインメニュー/簡易設定/ゲーム速度変更")
+			if ConfigGameSpeedMenu == nil then
+				temporarilyhide()	
+				Config_GameSpeed()
+			else	
+				if ConfigGameSpeedMenu >= 1 and ConfigGameSpeedMenu <= 2 then
+					local chosenValue = GameSpeed[ConfigGameSpeedMenu]
+					gg.editAll(chosenValue, gg.TYPE_FLOAT)
+					Config_GameSpeed()
+				elseif ConfigGameSpeedMenu == 3 then					
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "ゲーム速度を入力\n(倍率,デフォ:1,Float)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							gg.editAll(val[1], gg.TYPE_FLOAT)
+							break
+						else
+							temporarilyhide()
+						end
+					end			
+					Config_GameSpeed()
+				elseif ConfigGameSpeedMenu == 4 then
+					Config()
+				end	
+			end
+		end	
+--	メインメニュー/	簡易設定/	物理ダメージ	--		
+		function Config_Physical()
+			gg.clearResults()
+			local offsets = {0x0, 0x4, 0x8, 0xC}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end			
+			gg.setVisible(false)
+			ConfigPhysicalMenu = gg.choice({
+			"[1]    ほぼデフォルト",
+			"[2]    10,000倍",
+			"[3]    任意の値",				
+			"[←]    もどる"
+			}, nil,"メインメニュー/簡易設定/物理ダメージ")
+			if ConfigPhysicalMenu == nil then
+				temporarilyhide()	
+				Config_Physical()
+			else	
+				if ConfigPhysicalMenu == 1 then
+					applyOffset(offsets[1])
+					gg.editAll("150", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("150", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("150", gg.TYPE_DWORD)
+					applyOffset(offsets[4])
+					gg.editAll("150", gg.TYPE_DWORD)
+					Config_Physical()
+				elseif ConfigPhysicalMenu == 2 then
+					applyOffset(offsets[1])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[2])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					gg.clearResults()
+					applyOffset(offsets[3])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					applyOffset(offsets[4])
+					gg.editAll("1,500,000", gg.TYPE_DWORD)
+					Config_Physical()
+				elseif ConfigPhysicalMenu == 3 then					
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "ハンター全物理ダメージを入力\n(割合[%],ほぼデフォルト:150,Dword)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							applyOffset(offsets[1])
+							gg.editAll(val[1], gg.TYPE_DWORD)	
+							gg.clearResults()
+							applyOffset(offsets[2])
+							gg.editAll(val[1], gg.TYPE_DWORD)	
+							gg.clearResults()
+							applyOffset(offsets[3])
+							gg.editAll(val[1], gg.TYPE_DWORD)	
+							gg.clearResults()
+							applyOffset(offsets[4])
+							gg.editAll(val[1], gg.TYPE_DWORD)								
+							break
+						else
+							temporarilyhide()
+						end
+					end	
+					Config_Physical()
+				elseif ConfigPhysicalMenu == 4 then
+					Config()
+				end	
+			end
+		end		
+--	メインメニュー/	簡易設定/	武器会心率,会心ダメージ変更	--
+		function Config_CriticalPlusDamagePercent()
+		    gg.clearList()
+			gg.clearResults()
+			gg.setVisible(false)
+			local prompt = {"\n全武器の会心率\n(範囲:-100~100,Dword)", "プラス会心ダメージ(デフォ:125,Dword)", "マイナス会心ダメージ(デフォ:75,Dword)"}			
+			local userInput = gg.prompt(prompt, {[1] = "", [2] = "", [3] = ""}, {[1] = gg.TYPE_DWORD, [2] = gg.TYPE_DWORD, [3] = gg.TYPE_DWORD})
+			if not userInput then
+			    Config()
+			end			
+			local value1 = userInput[1]
+			local value2 = userInput[2]
+			local value2 = userInput[3]
+			gg.setVisible(false)
+			valueFromClass("WeaponLevelSpecSettingsProto", "0x24", false, false, gg.TYPE_DWORD)
+			gg.getResults(9999)
+    		gg.editAll(value1, gg.TYPE_DWORD)			
+    		gg.clearResults()
+            gg.setVisible(false)
+            gg.setRanges(32)
+            gg.searchNumber(214748364930, gg.TYPE_QWORD)
+            HackersHouse = gg.getResults(250000)
+            Offsets = {}
+            Offsets['FirstOffset'] = {}
+            Offsets['SecondOffset'] = {}
+            Offsets['FinalResults'] = {}
+            OffsetsIndex = 1
+            for index, value in ipairs(HackersHouse) do
+                Offsets['FirstOffset'][OffsetsIndex] = {}
+                Offsets['FirstOffset'][OffsetsIndex].address = HackersHouse[index].address + -8
+                Offsets['FirstOffset'][OffsetsIndex].flags = gg.TYPE_QWORD
+				Offsets['SecondOffset'][OffsetsIndex] = {}
+                Offsets['SecondOffset'][OffsetsIndex].address = HackersHouse[index].address + 40
+                Offsets['SecondOffset'][OffsetsIndex].flags = gg.TYPE_QWORD	OffsetsIndex = OffsetsIndex + 1
+            end
+            Offsets['FirstOffset'] = gg.getValues(Offsets['FirstOffset'])
+            Offsets['SecondOffset'] = gg.getValues(Offsets['SecondOffset'])
+            OffsetsIndex = 1
+            for index, value in ipairs(Offsets['FirstOffset']) do
+            	if (Offsets['FirstOffset'][index].value == 558345748555) and (Offsets['SecondOffset'][index].value == 4453159313476681728) then
+            		Offsets['FinalResults'][OffsetsIndex] = {}
+               		Offsets['FinalResults'][OffsetsIndex] =  Offsets['FirstOffset'][index]
+               		OffsetsIndex = OffsetsIndex + 1
+               	end
+            end
+            for index, value in ipairs(Offsets['FinalResults']) do
+             	Offsets['FinalResults'][index].address = Offsets['FinalResults'][index].address + -4
+               	Offsets['FinalResults'][index].flags = 4
+            end
+            gg.loadResults(Offsets['FinalResults'])
+			gg.getResults(9999)
+			gg.editAll(value2, gg.TYPE_DWORD)
+			local results = gg.getResults(9999)
+			gg.addListItems(results)
+			gg.clearResults()
+			local resultList = gg.getListItems()
+			local offset = 0x4
+			local modifiedResults = {}
+			for _, result in ipairs(resultList) do
+				local modifiedAddress = result.address + offset
+				table.insert(modifiedResults, {address = modifiedAddress, value = result.value, flags = result.flags})
+			end
+			gg.loadResults(modifiedResults)	
+			gg.getResults(9999)
+			gg.editAll(value3, gg.TYPE_DWORD)			
+    		temporarilyhide()
+    		Config_CriticalPlusDamagePercent()
+		end	
+--	メインメニュー/	簡易設定/	ボウガン用	--		
+		function Config_Bowgun()
+			gg.clearList()
+			gg.clearResults()
+			local offsets = {0x0, 0x4}
+			local resultList = gg.getListItems()
+			local modifiedResults = {}
+			local function applyOffset(offset)
+				for _, result in ipairs(resultList) do
+					table.insert(modifiedResults, {address = result.address + offset, value = result.value, flags = result.flags})
+				end
+				gg.loadResults(modifiedResults)
+				gg.getResults(9999)
+			end			
+			gg.setVisible(false)	
+			local prompt = {"弾丸種類\n(1:通常弾,2:貫通弾,3:散弾,4:徹甲榴弾,5:炸裂弾)", "弾丸属性\n(1:なし,2:火,3:水,4:雷,5:氷,6:龍,7:毒,8:麻痺,9:睡眠,10:爆破)\n*7以上は機能しない"}			
+			local userInput = gg.prompt(prompt, {[1] = "", [2] = ""}, {[1] = gg.TYPE_DWORD, [2] = gg.TYPE_DWORD})
+			if not userInput then
+			    Config()
+			end			
+			local value1 = userInput[1]
+			local value2 = userInput[2]
+            gg.setVisible(false)				
+			valueFromClass("BowgunAmmoSettingsProto", "0x10", false, false, gg.TYPE_DWORD)
+			gg.getResults(9999)	
+			gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+			applyOffset(offsets[1])	
+			gg.editAll(value1, gg.TYPE_DWORD)
+			gg.clearResults()
+			applyOffset(offsets[2])	
+			gg.editAll(value2, gg.TYPE_DWORD)
+			gg.clearList()
+			gg.clearResults()				
+			gg.setVisible(false)
+			valueFromClass("BowgunAmmoSpec", "0x18", false, false, gg.TYPE_DWORD)
+			gg.getResults(9999)	
+			gg.refineNumber("0~", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1, 0)
+			gg.getResults(9999)
+			gg.editAll("1",gg.TYPE_DWORD)			
+			local results = gg.getResults(9999)
+			gg.addListItems(results)
+			gg.clearResults()
+			local resultList = gg.getListItems()
+			local offset = 0x4
+			local modifiedResults = {}
+			for _, result in ipairs(resultList) do
+				local modifiedAddress = result.address + offset
+				table.insert(modifiedResults, {address = modifiedAddress, value = result.value, flags = result.flags})
+			end
+			gg.loadResults(modifiedResults)	
+			gg.getResults(9999)
+			gg.editAll("1",gg.TYPE_DWORD)			
+			gg.clearList()
+			gg.clearResults()				
+			gg.setVisible(false)
+			valueFromClass("MotionController", "0x28", false, false, gg.TYPE_FLOAT)
+			gg.getResults(9999)		
+			gg.refineNumber("0~", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)
+			gg.getResults(9999)
+			gg.setVisible(false)
+			gg.alert("ハンター動作速度設定に移ります。\n\n*以下の操作が必要\n[STEP1] モンスター動作速度の設定\n[STEP2] 戦闘画面への出入り")			
+			while true do
+				gg.setVisible(false)
+				MonsterMotionSpeedMenuHunter = gg.choice({
+				"[1]    デフォルト",
+				"[2]    凍結",
+				"[3]    5倍"
+				},nil,"-->>[STEP1] モンスター,オトモ動作速度の設定")        				
+				if MonsterMotionSpeedMenuHunter == nil then
+				else
+					if MonsterMotionSpeedMenuHunter == 1 then
+						gg.editAll("1.0001", gg.TYPE_FLOAT)
+					elseif MonsterMotionSpeedMenuHunter == 2 then
+						gg.editAll("0", gg.TYPE_FLOAT)
+					elseif MonsterMotionSpeedMenuHunter == 3 then
+						gg.editAll("5", gg.TYPE_FLOAT)
+					end
+					break
+				end
+			end
+			gg.alert("-->>[STEP2] 戦闘画面への出入り","")
+			while true do
+				temporarilyhide()
+				gg.setVisible(false)
+				local choice = gg.alert("戦闘画面への出入りを済ませましたか？","はい")
+				if choice == 1 then
+					break
+				end
+			end
+			gg.refineNumber("0.5~~1", gg.TYPE_FLOAT, false, gg.SIGN_NOT_EQUAL, 0, -1, 0)	
+			Config_Bowgun_HunterSpeed()
+		end		
+--	メインメニュー/	簡易設定/	ボウガン用/	ハンター動作速度	--	
+		function Config_Bowgun_HunterSpeed()
+			local results = gg.getResults(9999)
+			local HunterSpeedValues = {"1", "5", "50"}
+			gg.setVisible(false)
+			local options = {
+				"[1]    デフォルト",
+				"[2]    5倍",
+				"[3]    50倍",
+				"[4]    任意の値",
+				"[←]    もどる"
+			}
+			ConfigBowgunHunterSpeedMenu = gg.choice(options, nil, "メインメニュー/簡易設定/ボウガン用/ハンター動作速度")
+			if ConfigBowgunHunterSpeedMenu == nil then
+				temporarilyhide()
+				Config_Bowgun_HunterSpeed()
+			else
+				if ConfigBowgunHunterSpeedMenu >= 1 and ConfigBowgunHunterSpeedMenu <= 3 then
+					for _, result in ipairs(results) do
+						gg.addListItems({
+							{
+								address = result.address,
+								flags = gg.TYPE_FLOAT,
+								value = HunterSpeedValues[ConfigBowgunHunterSpeedMenu],
+								freeze = true
+							}
+						})
+					end
+					Config_Bowgun_HunterSpeed()
+				elseif ConfigBowgunHunterSpeedMenu == 4 then
+					while true do
+						gg.setVisible(false)
+						val = gg.prompt({[1] = "ハンター動作速度を入力\n(倍率,デフォ:1,Float)"}, {[1] = ""})
+						if val and val[1] ~= nil then
+							for _, result in ipairs(results) do
+								gg.addListItems({
+									{
+										address = result.address,
+										flags = gg.TYPE_FLOAT,
+										value = tonumber(val[1]),
+										freeze = true
+									}
+								})
+							end
+							break
+						else
+							temporarilyhide()
+						end
+					end
+					Config_Bowgun_HunterSpeed()
+				elseif ConfigBowgunHunterSpeedMenu == 5 then
+					Config()
+				end
+			end
+		end
+----------Offset Finder----------
+--[[ Field_Offset_Finder
+   Free and Open Source
+   Version : 3
+   Script Made By: Hackers House
+   Get Updates: https://t.me/Hackers_House_YT
+   Chat Group : https://t.me/Hackers_House_YT_chat_group
+]]--
+function valueFromClass(class, offset, tryHard, bit32, valueType)
+
+Get_user_input = {}
+Get_user_input[1] = class
+Get_user_input[2] = offset
+Get_user_input[3] = tryHard
+Get_user_input[4] = bit32
+Get_user_type = valueType
+start2()
+end
+function loopCheck()
+if userMode == 1 then
+UI()
+elseif error == 3 then
+stopClose()
+end
+end
+--[[ ℹ️ These function help in error log ]]--
+function found_(message)
+if error == 1 then
+found2(message)
+elseif error == 2 then
+found3(message)
+elseif error == 3 then
+found4(message)
+else
+found(message)
+end
+end
+function found(message)
+if count == 0 then
+gg.clearResults()
+gg.clearList()
+first_error = message
+error = 1
+second_start()
+end
+end
+function found2(message)
+if count == 0 then
+gg.clearResults()
+gg.clearList()
+second_error = message
+error = 2
+third_start()
+end
+end
+function found3(message)
+if count == 0 then
+gg.clearResults()
+gg.clearList()
+third_error = message
+error = 3
+fourth_start()
+end
+end
+function found4(message)
+if count == 0 then
+gg.clearResults()
+gg.clearList()
+gg.alert("❌Value NOT FOUND❌\nError Log:\nTry 1: "..first_error.."\nTry 2: "..second_error.."\nTry 3: "..third_error.."\nTry 4: ".. message.."\n\nℹ️Try Thisℹ️\n\n🟢1: Make Sure You are Using Correct Version Of game and the dump. 64 bit game and 64 bit dump or 32 bit game 32 bit dump + check try for 32 bit option in script or Version of game and same version of dump.\n\n🟡2: Is the value allocated? if you are searching for player health maybe that value only loads after you load match and took some damage. So try again while playing\n\n🔴3: Is the class name correct? for example if the class is playerscript then don't forget to make P and S capital. So type PlayerScript not playerscript\n\n⚫4: Is the offset right? you have to type 0x before the offset for example the offset is C1 then you have to Give 0xC1 to this script\n\n🟤5: Tried Everything but still didn't work? then contact the devloper of this script https://t.me/Hackers_House_YT")
+gg.setVisible(true)
+loopCheck()
+end
+end
+--[[ 🟢Value Finders From Class and offset 🟢]]--
+function user_input_taker()
+if userMode == 1 then
+if Get_user_input == nil then
+default1 = ""
+default2 = "0x"
+default3 = false
+default4 = false
+else
+default1 = Get_user_input[1]
+default2 = Get_user_input[2]
+default3 = Get_user_input[3]
+default4 = Get_user_input[4]
+end
+gg.setVisible(false)
+Get_user_input = gg.prompt(
+{"🔰Script By🔰: https://t.me/Hackers_House_YT\n\nClass Name: ", "Offset: ","Try Harder --(decreases accuracy)","Try For 32 bit"},
+{default1,default2,default3,default4},
+{"text","text","checkbox","checkbox"})
+if Get_user_input ~= nil then
+if (Get_user_input[1] == "") or (Get_user_input[2] == "") then
+gg.alert("ℹ️ Don't Leave Input Blankℹ️")
+user_input_taker()
+end
+else
+temporarilyhide()
+UI()
+end
+gg.setVisible(false)
+Get_user_type = gg.choice({"1. Byte / Boolean","2. Dword / 32 bit Int","3. Qword / 64 bit Int","4. Float","5. Double"},nil,"🔰Script By🔰: https://t.me/Hackers_House_YT\n\nℹ️ Choose The Output Type ℹ️")
+if Get_user_type == 1 then
+Get_user_type = gg.TYPE_BYTE
+elseif Get_user_type == 2 then
+Get_user_type = gg.TYPE_DWORD
+elseif Get_user_type == 3 then
+Get_user_type = gg.TYPE_QWORD
+elseif Get_user_type == 4 then
+Get_user_type = gg.TYPE_FLOAT
+elseif Get_user_type == 5 then
+Get_user_type = gg.TYPE_DOUBLE
+else
+temporarilyhide()
+UI()
+end
+if Get_user_type ~= gg.TYPE_BYTE then
+if (Get_user_input[2] % 4) ~= 0 then
+gg.alert("ℹ️Hex Offset Must Be An Multiple OF 4ℹ️")
+user_input_taker()
+end
+end
+end
+error = 0 
+end
+function O_initial_search()
+gg.setVisible(false)
+gg.toast("🟢Hackers House: First Try")
+user_input = ":"..Get_user_input[1] 
+if Get_user_input[3] then
+offst = 25
+else
+offst = 0
+end
+end
+function O_dinitial_search()
+if error > 1 then
+gg.setRanges(gg.REGION_C_ALLOC)
+else
+gg.setRanges(gg.REGION_OTHER)
+end
+gg.searchNumber(user_input, gg.TYPE_BYTE)
+count = gg.getResultsCount()
+if count == 0 then
+found_("O_dinitial_search")
+return 0
+end
+Refiner = gg.getResults(1)
+gg.refineNumber(Refiner[1].value, gg.TYPE_BYTE)
+count = gg.getResultsCount()
+if count == 0 then
+found_("O_dinitial_search")
+return 0
+end
+val = gg.getResults(count)
+gg.addListItems(val)
+end
+function CA_pointer_search()
+gg.clearResults()
+gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
+gg.loadResults(gg.getListItems())
+gg.searchPointer(offst)
+count = gg.getResultsCount()
+if count == 0 then
+found_("CA_pointer_search")
+return 0
+end
+vel = gg.getResults(count)
+gg.clearList()
+gg.addListItems(vel)
+end
+function CA_apply_offset()
+if Get_user_input[4] then
+tanker = 0xfffffffffffffff8
+else
+tanker = 0xfffffffffffffff0
+end
+local copy = false
+local l = gg.getListItems()
+if not copy then gg.removeListItems(l) end
+for i, v in ipairs(l) do
+	v.address = v.address + tanker
+	if copy then v.name = v.name..' #2' end
+end
+gg.addListItems(l)
+end
+function CA2_apply_offset()
+if Get_user_input[4] then
+tanker = 0xfffffffffffffff8
+else
+tanker = 0xfffffffffffffff0
+end
+local copy = false
+local l = gg.getListItems()
+if not copy then gg.removeListItems(l) end
+for i, v in ipairs(l) do
+	v.address = v.address + tanker
+	if copy then v.name = v.name..' #2' end
+end
+gg.addListItems(l)
+end
+function Q_apply_fix()
+gg.setRanges(gg.REGION_ANONYMOUS)
+gg.loadResults(gg.getListItems())
+gg.clearList()
+count = gg.getResultsCount()
+if count == 0 then
+found_("Q_apply_fix")
+return 0
+end
+yy = gg.getResults(1000)
+gg.clearResults()
+i = 1
+c = 1
+s = {}
+while (i-1) < count do
+yy[i].address = yy[i].address + 0xb400000000000000
+gg.searchNumber(yy[i].address, gg.TYPE_QWORD)
+cnt = gg.getResultsCount()
+if 0 < cnt then
+bytr = gg.getResults(cnt)
+n = 1
+while (n-1) < cnt do
+s[c] = {}
+s[c].address = bytr[n].address
+s[c].flags = 32
+n = n + 1
+c = c + 1
+end
+end
+gg.clearResults()
+i = i + 1
+end
+gg.addListItems(s)
+end
+function A_base_value()
+gg.setRanges(gg.REGION_ANONYMOUS)
+gg.loadResults(gg.getListItems())
+gg.clearList()
+gg.searchPointer(offst)
+count = gg.getResultsCount()
+if count == 0 then
+found_("A_base_value")
+return 0
+end
+tel = gg.getResults(count)
+gg.addListItems(tel)
+end
+function A_base_accuracy()
+gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)
+gg.loadResults(gg.getListItems())
+gg.clearList()
+gg.searchPointer(offst)
+count = gg.getResultsCount()
+if count == 0 then
+found_("A_base_accuracy")
+return 0
+end
+kol = gg.getResults(count)
+i = 1
+h = {}
+while (i-1) < count do
+h[i] = {}
+h[i].address = kol[i].value
+h[i].flags = 32
+i = i + 1
+end
+gg.addListItems(h)
+end
+function A_user_given_offset()
+local old_save_list = gg.getListItems()
+for i, v in ipairs(old_save_list) do
+v.address = v.address + Get_user_input[2]
+v.flags = Get_user_type
+end
+gg.clearResults()
+gg.clearList()
+gg.loadResults(old_save_list)
+count = gg.getResultsCount()
+if count == 0 then
+found_("Q_apply_fix++")
+return 0
+end
+gg.setVisible(true)
+end
+--[[ 🔴 Different Functions For 1,2,3,4th try 🔴]]--
+function start()
+user_input_taker()
+O_initial_search()
+O_dinitial_search()
+if error > 0 then
+return 0
+end
+CA_pointer_search()
+if error > 0 then
+return 0
+end
+CA_apply_offset()
+if error > 0 then
+return 0
+end
+A_base_value()
+if error > 0 then
+return 0
+end
+if offst == 0 then
+A_base_accuracy()
+end
+if error > 0 then
+return 0
+end
+A_user_given_offset()
+if error > 0 then
+return 0
+end
+loopCheck()
+if error > 0 then
+return 0
+end
+end
+function start2()
+error = 0
+O_initial_search()
+O_dinitial_search()
+if error > 0 then
+return 0
+end
+CA_pointer_search()
+if error > 0 then
+return 0
+end
+CA_apply_offset()
+if error > 0 then
+return 0
+end
+A_base_value()
+if error > 0 then
+return 0
+end
+if offst == 0 then
+A_base_accuracy()
+end
+if error > 0 then
+return 0
+end
+A_user_given_offset()
+if error > 0 then
+return 0
+end
+loopCheck()
+if error > 0 then
+return 0
+end
+end
+function second_start()
+gg.toast("🟡Hackers House: Second Try")
+O_dinitial_search()
+if error > 1 then
+return 0
+end
+CA_pointer_search()
+if error > 1 then
+return 0
+end
+CA_apply_offset()
+if error > 1 then
+return 0
+end
+Q_apply_fix()
+if error > 1 then
+return 0
+end
+if offst == 0 then
+A_base_accuracy()
+end
+if error > 1 then
+return 0
+end
+A_user_given_offset()
+if error > 1 then
+return 0
+end
+loopCheck()
+if error > 1 then
+return 0
+end
+end
+function third_start()
+gg.toast("🔴Hackers House: Third Try")
+O_dinitial_search()
+if error > 2 then
+return 0
+end
+CA_pointer_search()
+if error > 2 then
+return 0
+end
+if offst == 0 then
+CA2_apply_offset()
+end
+if error > 2 then
+return 0
+end
+A_base_value()
+if error > 2 then
+return 0
+end
+if offst == 0 then
+A_base_accuracy()
+end
+if error > 2 then
+return 0
+end
+A_user_given_offset()
+if error > 2 then
+return 0
+end
+loopCheck()
+if error > 2 then
+return 0
+end
+end
+function fourth_start()
+gg.toast("☢️Hackers House: Fourth Try")
+O_dinitial_search()
+CA_pointer_search()
+CA2_apply_offset()
+Q_apply_fix()
+if offst == 0 then
+A_base_accuracy()
+end
+A_user_given_offset()
+loopCheck()
+end
+--[[ ℹ️ It will create an UI button and loop until user clicks the UI. If clicked calls start() ]]--
+function UI()
+gg.showUiButton()
+while true do
+if gg.isClickedUiButton() then
+gg.setVisible(false)
+local choice = gg.alert("メインメニュー/Offset Finder", "[←]    メインメニューにもどる")
+if choice == 1 then
+	mainMenu()
+end
+start()
+end
+end
+end
+function stopClose()
+while true do
+mainMenu()
+gg.setVisible(false)
+while gg.isVisible() == false do
+end
+end
+end
+if userMode == 2 then
+stopClose()
+else
+UI()
+end
