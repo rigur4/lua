@@ -168,7 +168,6 @@ end
 function found(message)
     if count == 0 then
         gg.clearResults()
-        gg.clearList()
         first_error = message
         error = 1
         second_start()
@@ -177,7 +176,7 @@ end
 function found2(message)
     if count == 0 then
         gg.clearResults()
-        gg.clearList()
+        
         second_error = message
         error = 2
         third_start()
@@ -186,7 +185,7 @@ end
 function found3(message)
     if count == 0 then
         gg.clearResults()
-        gg.clearList()
+        
         third_error = message
         error = 3
         fourth_start()
@@ -195,7 +194,7 @@ end
 function found4(message)
     if count == 0 then
         gg.clearResults()
-        gg.clearList()
+        
         gg.alert("❌ エラー ❌\n: "..first_error.."\n\nℹ️エラーの原因ℹ️\n\n🟢O_dinitial_search,: \nクラス名検索\n⇒ クラスデータの誤り\n・ggのプロセスを確認\n・クラス名, リファイン値を確認\n\n🟡CA_pointer_search, Q_apply_fix: \nポインタ検索1\n⇒ クラスデータが複製されていない。\n・変数を生成させてからコードを実行する(変数が生成される条件:該当の装備をするなど{*を確認})\n\n🟢のエラーはコードの不具合の可能性が高いです。naruse1122(Discord)まで連絡してください。")
         gg.setVisible(true)
         loopCheck()
