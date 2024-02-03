@@ -11,7 +11,7 @@ function Main()
 		"\n[7]    簡易選択\n",	
 		"\n[~]    DeveloperMode\n",		
 		"\n[X]    おわる"
-	}, nil, "メインメニュー\n\nMonsterHunterNow - 69.1 (2024/2/3)\n\n*がつく項目は実行後にそのステータスの変数が変わるような操作をしないで下さい\nクラッシュの原因になります")	
+	}, nil, "メインメニュー\n\nMonster - 69.1 (2024/2/3)\n\n*がつく項目は実行後にそのステータスの変数が変わるような操作をしないで下さい\nクラッシュの原因になります")	
 	if Mainmenu == nil then
 		temporarilyhide()	
 		Main()
@@ -7447,7 +7447,7 @@ end
 		Option1_currentB = 1
 		Option1_currentC = 1
 		Option1_currentD = 1
-		Option1_SelectedA = {"\n[1]    ゲーム速度\n","\n[ON]    ゲーム速度 デフォルト\n", "\n[ON]    ゲーム速度 4倍\n"}
+		Option1_SelectedA = {"\n[1]    ゲーム速度\n","\n[ON]    ゲーム速度 デフォルト\n", "\n[ON]    ゲーム速度 2倍\n", "\n[ON]    ゲーム速度 4倍\n"}
 		Option1_SelectedB = {"\n[2]    攻撃力\n", "\n[ON]    攻撃力 デフォルト\n", "\n[ON]    攻撃力 15倍\n", "\n[ON]    攻撃力 MAX\n"}	
 		Option1_SelectedC = {"\n[3]    防御力\n", "\n[ON]    防御力 デフォルト\n", "\n[ON]    防御力  MAX\n"}			
 		Option1_SelectedD = {"\n[4]    モンスター動作\n", "\n[ON]    モンスター動作 デフォルト\n", "\n[ON]    モンスター動作 凍結\n"}		
@@ -7486,12 +7486,16 @@ end
 					applyoffset(0xFC,gg.TYPE_FLOAT)
 					AddNameAddress("_GameSpeed")       
 				end	
-				if Option1_currentA == 1 or Option1_currentA == 3 then
+				if Option1_currentA == 1 or Option1_currentA == 4 then
 					gg.editAll("1", gg.TYPE_FLOAT)
 					Option1_currentA = 2
 				elseif Option1_currentA == 2 then
-					gg.editAll("4", gg.TYPE_FLOAT)
+					gg.editAll("2", gg.TYPE_FLOAT)
 					Option1_currentA = 3
+				end
+				elseif Option1_currentA == 3 then
+					gg.editAll("4", gg.TYPE_FLOAT)
+					Option1_currentA = 4
 				end
 			elseif Option1Menu == 2 then	
 				local start = gg.getRangesList("libil2cpp.so")[2].start
