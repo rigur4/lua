@@ -6999,40 +6999,23 @@ end
 		function  FieldConfig_OtomoAccessRange()
 			gg.getResults(9999)
 			gg.setVisible(false)
-			local OtomoAccessRange = {"80", "0", "800"}
+			local OtomoAccessRange = {"80", "0"}
 			FieldConfigOtomoAccessRangeMenu = gg.choice({
 				(FieldConfigOtomoAccessRange_Selected[1] and "\n-> [1]    デフォルト\n" or "\n[1]    デフォルト\n"),
-				(FieldConfigOtomoAccessRange_Selected[2] and "\n-> [2]    なし\n" or "\n[2]    なし\n"),				
-				(FieldConfigOtomoAccessRange_Selected[3] and "\n-> [2]    10 倍\n" or "\n[2]    10 倍\n"),
-				(FieldConfigOtomoAccessRange_Selected[4] and "\n-> [3]    任意の値\n" or "\n[3]    任意の値\n"),					
+				(FieldConfigOtomoAccessRange_Selected[2] and "\n-> [2]    なし\n" or "\n[2]    なし\n"),							
 				"\n[←]    もどる"
 			}, nil, "メインメニュー/マップ//\n\nオトモのアクセス範囲")
 			if FieldConfigOtomoAccessRangeMenu == nil then
 				temporarilyhide()
 				 FieldConfig_OtomoAccessRange()
-			elseif FieldConfigOtomoAccessRangeMenu >= 1 and FieldConfigOtomoAccessRangeMenu <= 4 then
+			elseif FieldConfigOtomoAccessRangeMenu >= 1 and FieldConfigOtomoAccessRangeMenu <= 2 then
 				for i = 1, 4 do
 					FieldConfigOtomoAccessRange_Selected[i] = false
 				end
 				FieldConfigOtomoAccessRange_Selected[FieldConfigOtomoAccessRangeMenu] = true	
 				LoadNameAddress("FieldConfig_OtomoAccess")
-				if FieldConfigOtomoAccessRangeMenu >= 1 and FieldConfigOtomoAccessRangeMenu <= 3 then
-					local chosenValue = OtomoAccessRange[FieldConfigOtomoAccessRangeMenu]
-					gg.editAll(chosenValue, gg.TYPE_FLOAT)
-				elseif FieldConfigOtomoAccessRangeMenu == 4 then
-					while true do
-						gg.setVisible(false)
-						local val = gg.prompt({[1] = "オトモのアクセス範囲を変更 #Float型\n\n半径m, デフォ: 80\n[  0 ~   ]"}, {[1] = ""}, {"number"})
-						if val and val[1] ~= nil then
-							gg.editAll(val[1], gg.TYPE_FLOAT)		
-							break
-						else
-							temporarilyhide()
-						end
-					end
-				end
 				FieldConfig_OtomoAccessRange()
-			elseif FieldConfigOtomoAccessRangeMenu == 5 then
+			elseif FieldConfigOtomoAccessRangeMenu == 3 then
 				Map()
 			end
 		end		
@@ -7563,7 +7546,7 @@ end
 		Option2_SelectedA = {"\n[5]    部位破壊\n", "\n[ON]    部位破壊 デフォルト\n", "\n[ON]    部位破壊 容易化\n"}		
 		Option2_SelectedB = {"\n[6]    リザルト画面 スキップ\n", "\n[ON]    リザルト画面 あり\n", "\n[ON]    リザルト画面 なし\n"}	
 		Option2_SelectedC = {"\n[7]    DPSコンボカウンター\n","\n[ON]    DPSコンボカウンター 非表示\n", "\n[ON]    DPSコンボカウンター 表示\n"}			
-		Option2_SelectedD = {"\n[8]    オトモアクセス範囲\n", "\n[ON]    オトモアクセス範囲 デフォルト\n", "\n[ON]    オトモアクセス範囲 なし\n", "\n[ON]    オトモアクセス範囲 10倍\n"}	
+		Option2_SelectedD = {"\n[8]    オトモアクセス範囲\n", "\n[ON]    オトモアクセス範囲 デフォルト\n", "\n[ON]    オトモアクセス範囲 なし\n""}	
 		Option2_SelectedE = {"\n[9]    装備の強化レベル\n", "\n[ON]    装備の強化レベル Lv5\n", "\n[ON]    装備の強化レベル Lv4\n"}			
 		function Option2()
 			gg.setVisible(false)	
@@ -7632,15 +7615,12 @@ end
 					gg.refineNumber("1", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL, 0, -1, 0)	
 					AddNameAddress("FieldConfig_OtomoAccess")
 				end	
-				if Option2_currentD == 1 or Option2_currentD == 4 then
+				if Option2_currentD == 1 or Option2_currentD == 3 then
 					gg.editAll("80", gg.TYPE_FLOAT)
 					Option2_currentD = 2
 				elseif Option2_currentD == 2 then
 					gg.editAll("0", gg.TYPE_FLOAT)
 					Option2_currentD = 3
-				elseif Option2_currentD == 3 then
-					gg.editAll("800", gg.TYPE_FLOAT)
-					Option2_currentD = 4
 				end
 			elseif Option2Menu == 5 then		
 				valueFromClass("UserHunterWeapon")	
