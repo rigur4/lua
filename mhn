@@ -11,7 +11,7 @@ function Main()
 		"\n[7]    簡易選択\n",	
 		"\n[~]    DeveloperMode\n",		
 		"\n[X]    おわる"
-	}, nil, "メインメニュー\n\nMonster - 69.1 (2024/2/3)\n\n*がつく項目は実行後にそのステータスの変数が変わるような操作をしないで下さい\nクラッシュの原因になります")	
+	}, nil, "メインメニュー\n\nMonsterHunterNow - 69.1 (2024/2/3)\n\n*がつく項目は実行後にそのステータスの変数が変わるような操作をしないで下さい\nクラッシュの原因になります")	
 	if Mainmenu == nil then
 		temporarilyhide()	
 		Main()
